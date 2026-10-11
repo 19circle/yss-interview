@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赢时胜 · 估值系统业务测试 · 面试作战手册（尹胜）</title>
+<style>
+  :root{
+    --ink:#16181d; --ink2:#3d4451; --ink3:#6b7280;
+    --bg:#f5f6f8; --card:#ffffff; --line:#e3e6ec; --line2:#eef1f5;
+    --brand:#1c5fa8; --brand-l:#e8f0fa; --brand-d:#123c6b;
+    --gold:#b8860b; --gold-l:#fdf6e3;
+    --green:#1a7f4b; --green-l:#e9f7ef;
+    --red:#b3261e; --red-l:#fdecea;
+    --amber:#b45309; --amber-l:#fff7e6;
+    --purple:#6d4aa8; --purple-l:#f2edfb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:15px; line-height:1.85; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px 80px;}
+
+  /* ---------- 封面 ---------- */
+  .cover{
+    background:linear-gradient(135deg,#123c6b 0%,#1c5fa8 55%,#2a76c4 100%);
+    color:#fff; padding:44px 44px 38px; border-radius:0 0 20px 20px; margin-bottom:26px;
+    position:relative; overflow:hidden;
+  }
+  .cover::after{
+    content:""; position:absolute; right:-70px; top:-70px; width:280px; height:280px;
+    border-radius:50%; background:rgba(255,255,255,.07);
+  }
+  .cover::before{
+    content:""; position:absolute; right:60px; bottom:-90px; width:180px; height:180px;
+    border-radius:50%; background:rgba(255,255,255,.05);
+  }
+  .cover .kicker{font-size:13px; letter-spacing:3px; opacity:.8; margin-bottom:10px;}
+  .cover h1{margin:0 0 8px; font-size:31px; line-height:1.35; letter-spacing:.5px;}
+  .cover h1 span{color:#ffd980;}
+  .cover .sub{font-size:15px; opacity:.9; margin-bottom:22px;}
+  .cover .meta{display:flex; flex-wrap:wrap; gap:10px; position:relative; z-index:2;}
+  .chip{
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+    padding:6px 14px; border-radius:999px; font-size:13px;
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:26px 30px; margin-bottom:20px; box-shadow:0 1px 3px rgba(16,24,40,.04);
+  }
+  h2.sec{
+    font-size:22px; margin:44px 0 8px; padding-left:14px; border-left:5px solid var(--brand);
+    line-height:1.3; color:var(--brand-d);
+  }
+  h2.sec .num{
+    display:inline-block; background:var(--brand); color:#fff; font-size:13px;
+    padding:2px 9px; border-radius:6px; margin-right:10px; vertical-align:3px; font-weight:400;
+  }
+  .sec-desc{color:var(--ink3); font-size:13.5px; margin:0 0 16px 19px;}
+  h3{font-size:17.5px; margin:26px 0 10px; color:var(--brand-d);}
+  h3:first-child{margin-top:0;}
+  h4{font-size:15.5px; margin:18px 0 8px; color:var(--ink);}
+  p{margin:9px 0;}
+  ul,ol{margin:9px 0; padding-left:22px;}
+  li{margin:5px 0;}
+  strong{color:var(--brand-d);}
+  em{font-style:normal; background:linear-gradient(transparent 62%, #ffe9a8 62%); font-weight:600;}
+  code{
+    background:#f1f3f7; padding:2px 6px; border-radius:4px;
+    font-family:"Cascadia Mono",Consolas,"Courier New",monospace; font-size:13.5px; color:#a13d1f;
+  }
+  pre{
+    background:#1e2430; color:#e6edf3; padding:15px 18px; border-radius:10px;
+    overflow-x:auto; font-family:"Cascadia Mono",Consolas,"Courier New",monospace;
+    font-size:13px; line-height:1.7; margin:12px 0;
+  }
+  pre code{background:none; color:inherit; padding:0;}
+  .cmt{color:#7d8b9c;}
+  .kw{color:#ff9d6b;}
+  .str{color:#9ee4a5;}
+
+  /* ---------- 表格 ---------- */
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top;}
+  th{background:#f0f4f9; color:var(--brand-d); font-weight:600; white-space:nowrap;}
+  tr:nth-child(even) td{background:#fafbfc;}
+
+  /* ---------- 提示块 ---------- */
+  .box{border-radius:11px; padding:15px 20px; margin:14px 0; border-left:5px solid;}
+  .box .t{font-weight:700; display:block; margin-bottom:4px; font-size:14.5px;}
+  .b-brand{background:var(--brand-l); border-color:var(--brand);}
+  .b-gold{background:var(--gold-l); border-color:var(--gold);}
+  .b-green{background:var(--green-l); border-color:var(--green);}
+  .b-red{background:var(--red-l); border-color:var(--red);}
+  .b-amber{background:var(--amber-l); border-color:var(--amber);}
+  .b-purple{background:var(--purple-l); border-color:var(--purple);}
+  .b-gold .t{color:var(--gold);} .b-green .t{color:var(--green);}
+  .b-red .t,.b-red strong{color:var(--red);} .b-amber .t{color:var(--amber);}
+  .b-purple .t{color:var(--purple);} .b-brand .t{color:var(--brand-d);}
+  .b-red strong{color:var(--red);}
+
+  /* ---------- 标签 ---------- */
+  .tag{
+    display:inline-block; font-size:12px; padding:2px 9px; border-radius:5px;
+    margin-right:6px; vertical-align:2px; font-weight:600; white-space:nowrap;
+  }
+  .t-must{background:#fdecea; color:#b3261e;}
+  .t-high{background:#fff7e6; color:#b45309;}
+  .t-mid{background:#e8f0fa; color:#1c5fa8;}
+  .t-star{background:#fdf6e3; color:#8a6500;}
+
+  /* ---------- 逐字稿 ---------- */
+  .script{
+    background:#fbfcfe; border:1px dashed #b9cbe4; border-radius:12px;
+    padding:18px 24px; margin:14px 0; line-height:2.05; font-size:15px;
+  }
+  .script .lead{font-weight:700; color:var(--brand); display:block; margin-bottom:6px;}
+  .script p{margin:10px 0;}
+  .script .hl{background:#eef4fc; padding:1px 4px; border-radius:3px; font-weight:600; color:var(--brand-d);}
+
+  /* ---------- 折叠式问答 ---------- */
+  details{
+    border:1px solid var(--line); border-radius:10px; margin:9px 0;
+    background:#fff; overflow:hidden;
+  }
+  details[open]{border-color:#b9cbe4; box-shadow:0 2px 8px rgba(28,95,168,.07);}
+  summary{
+    cursor:pointer; padding:12px 18px; font-weight:600; color:var(--ink);
+    list-style:none; display:flex; align-items:flex-start; gap:10px; user-select:none;
+    background:#fafbfc;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::before{
+    content:"Q"; flex:0 0 22px; height:22px; line-height:22px; text-align:center;
+    background:var(--brand); color:#fff; border-radius:5px; font-size:12px; margin-top:3px;
+  }
+  details[open] summary{background:#f0f4f9; border-bottom:1px solid var(--line);}
+  .ans{padding:14px 20px 18px 50px;}
+  .ans::before{
+    content:"A"; position:absolute; margin-left:-30px; margin-top:2px;
+    width:22px; height:22px; line-height:22px; text-align:center;
+    background:var(--green); color:#fff; border-radius:5px; font-size:12px;
+  }
+  .ans{position:relative;}
+
+  /* ---------- 目录 ---------- */
+  .toc{display:grid; grid-template-columns:1fr 1fr; gap:8px 26px;}
+  .toc a{
+    color:var(--ink2); text-decoration:none; padding:7px 12px; border-radius:8px;
+    border:1px solid var(--line2); font-size:14px; transition:.15s; display:block;
+  }
+  .toc a:hover{background:var(--brand-l); border-color:#b9cbe4; color:var(--brand-d);}
+  .toc a b{color:var(--brand); margin-right:8px;}
+
+  /* ---------- 速览卡 ---------- */
+  .flash{
+    border:2px solid var(--gold); border-radius:14px; background:#fffdf6;
+    padding:24px 28px; margin:18px 0;
+  }
+  .flash h3{color:#8a6500; margin-top:0;}
+  .flash .row{display:flex; gap:14px; flex-wrap:wrap; margin:12px 0;}
+  .flash .mini{
+    flex:1 1 210px; background:#fff; border:1px solid #ecdfb8; border-radius:10px; padding:12px 15px;
+  }
+  .flash .mini b{display:block; color:#8a6500; font-size:13px; margin-bottom:5px;}
+  .flash .mini span{font-size:14px; color:var(--ink2);}
+
+  /* ---------- 图片区 ---------- */
+  .fig{margin:18px 0; text-align:center;}
+  .fig svg{max-width:100%; height:auto;}
+  .fig .cap{font-size:13px; color:var(--ink3); margin-top:8px;}
+
+  /* ---------- 其它 ---------- */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .mini-card{border:1px solid var(--line); border-radius:11px; padding:15px 18px; background:#fcfdfe;}
+  .mini-card h4{margin:0 0 8px; color:var(--brand-d); font-size:15px;}
+  hr{border:none; border-top:1px solid var(--line); margin:26px 0;}
+  .footer{text-align:center; color:var(--ink3); font-size:13px; padding:30px 0 10px; line-height:2;}
+  a{color:var(--brand);}
+  .kbd{
+    display:inline-block; background:#fff; border:1px solid #ccd3dd; border-bottom-width:2px;
+    border-radius:5px; padding:1px 7px; font-size:12.5px; font-family:Consolas,monospace; color:var(--ink2);
+  }
+  @media (max-width:760px){
+    .toc,.grid2{grid-template-columns:1fr;}
+    .cover{padding:30px 22px; border-radius:0;}
+    .cover h1{font-size:23px;}
+    .card{padding:20px 18px;}
+    .script{padding:15px 16px;}
+    .ans{padding-left:20px;}
+    .ans::before{display:none;}
+  }
+  @media print{
+    body{background:#fff; font-size:12px;}
+    .card{box-shadow:none; break-inside:avoid;}
+    details{break-inside:avoid;} details .ans{display:block !important;}
+    details:not([open]) .ans{display:block !important;}
+    h2.sec{break-before:page;}
+    .cover{border-radius:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 封面 ============ -->
+<div class="cover">
+  <div class="kicker">INTERVIEW BATTLE PLAN</div>
+  <h1>赢时胜 · <span>估值系统业务测试</span><br>面试作战手册</h1>
+  <div class="sub">候选人：尹胜　|　准备日期：2026-10-11　|　面试：2026-10-12（周一）</div>
+  <div class="meta">
+    <div class="chip">岗位拆解</div>
+    <div class="chip">自我介绍逐字稿 ×3</div>
+    <div class="chip">项目 STORY BANK</div>
+    <div class="chip">估值业务速成</div>
+    <div class="chip">45 道预测题</div>
+    <div class="chip">雷区话术</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="box b-red">
+  <span class="t">读之前先记住一句话</span>
+  估值系统业务测试，考的<strong>不是"你会不会点功能"，而是"你算得对不对"</strong>。面试官最想确认三件事：①你懂不懂基金估值这条业务链；②你有没有"数据必须分毫不差"的测试习惯；③你能不能把手工核对变成自动化。你的经验天然匹配第②③条，<strong>第①条明天必须靠这份手册补上——这是胜负手。</strong>
+</div>
+
+<!-- ============ 目录 ============ -->
+<div class="card">
+  <h3 style="margin-top:0">📑 手册导航（建议今晚按顺序过一遍，明早只看第 0 和第 8 节）</h3>
+  <div class="toc">
+    <a href="#s0"><b>00</b>面试速览：一页纸搞清明天怎么打</a>
+    <a href="#s1"><b>01</b>岗位拆解：赢时胜在考什么</a>
+    <a href="#s2"><b>02</b>匹配度体检：你的优势与短板</a>
+    <a href="#s3"><b>03</b>自我介绍逐字稿（2分钟/1分钟/30秒）</a>
+    <a href="#s4"><b>04</b>项目介绍逐字稿 + 深挖追问预案</a>
+    <a href="#s5"><b>05</b>估值核算业务速成（核心补课）</a>
+    <a href="#s6"><b>06</b>45 道高频预测题与答题框架</a>
+    <a href="#s7"><b>07</b>反问环节：问什么显得专业</a>
+    <a href="#s8"><b>08</b>雷区与话术（gap / 离职 / 薪资 / 驻场）</a>
+    <a href="#s9"><b>09</b>面试前 1 小时速览卡</a>
+  </div>
+</div>
+
+<!-- ============ 00 速览 ============ -->
+<h2 class="sec" id="s0"><span class="num">00</span>面试速览：一页纸搞清明天怎么打</h2>
+<p class="sec-desc">先看结论，再看细节。这一节是给"只剩三小时"的你看的。</p>
+
+<div class="card">
+  <div class="grid2">
+    <div class="mini-card">
+      <h4>🎯 对手是谁</h4>
+      <p style="margin:0;font-size:14px">深圳市赢时胜信息技术股份有限公司（创业板 <code>300377</code>），国内资管行业核心系统市占率第一梯队。它的看家产品就是<strong>估值核算系统</strong>（现主推 V5.5 信创版），客户是公募基金、券商资管、保险资管、银行理财子、信托——服务 200+ 资管公司。</p>
+    </div>
+    <div class="mini-card">
+      <h4>🧭 你应聘的岗位本质</h4>
+      <p style="margin:0;font-size:14px">"业务测试"= 站在<strong>基金会计/运营人员</strong>的视角，验证系统算出来的<em>净值、凭证、估值表、财务报表</em>是否与业务规则、会计口径、合同约定完全一致。是"懂业务的测试"，不是"点点点的测试"。</p>
+    </div>
+    <div class="mini-card">
+      <h4>🗣️ 明天开场怎么说</h4>
+      <p style="margin:0;font-size:14px">自我介绍按第 03 节逐字稿走（2 分钟）。核心落点是这句：<em>"我做的资金账务和估值核算，底层是同一种能力——把业务规则翻译成可验证的数据口径。"</em></p>
+    </div>
+    <div class="mini-card">
+      <h4>🛡️ 最需要防守的点</h4>
+      <p style="margin:0;font-size:14px">① 没做过估值核算 → 主动承认 + 展示已自学的证据（第 05 节就是你的弹药）；② 5 个月 gap → 按第 08 节话术，转向"能力保鲜"；③ 薪资 15-20k 可能偏高 → 先问区间，别先报数。</p>
+    </div>
+  </div>
+
+  <h4>⏱️ 明天的回答节奏模板（背下来）</h4>
+  <table>
+    <tr><th style="width:120px">环节</th><th>你的动作</th></tr>
+    <tr><td>自我介绍</td><td>2 分钟，不提简历原话，只讲"三个特点 + 一个案例 + 为什么来"</td></tr>
+    <tr><td>项目深挖</td><td>主推 <strong>银企直联 DSP</strong>（最像估值系统的测试场景），每次回答都带"数据怎么验的"</td></tr>
+    <tr><td>业务考问</td><td>碰到不懂的估值术语，<strong>不要硬编</strong>。答："这块我在自学，我的理解是……（说你的推理），如果有偏差请您指正。"</td></tr>
+    <tr><td>测试方法</td><td>所有用例设计题，第一句先说"我会先确定业务的<em>权威口径</em>（合同/准则/往来单），再倒推验证点"</td></tr>
+    <tr><td>反问</td><td>问 2-3 个第 07 节里的问题，必问"这个岗位负责哪条产品线、驻场比例多少"</td></tr>
+  </table>
+</div>
+
+<!-- ============ 01 岗位拆解 ============ -->
+<h2 class="sec" id="s1"><span class="num">01</span>岗位拆解：赢时胜在考什么</h2>
+<p class="sec-desc">基于公司公开资料 + 该岗位真实招聘要求推演。你手上如果有 JD，逐条对照这一节，看有没有漏掉的考点。</p>
+
+<div class="card">
+  <h3>1.1 公司画像（面试中要能自然说出来，证明你做了功课）</h3>
+  <table>
+    <tr><th style="width:150px">维度</th><th>要点</th></tr>
+    <tr><td>基本信息</td><td>深圳市赢时胜信息技术股份有限公司，创业板上市，代码 <code>300377</code>，总部深圳，北京/上海/成都/长沙设分公司</td></tr>
+    <tr><td>行业地位</td><td>国内金融资管行业 IT 综合服务商第一梯队，资管后台系统市占率长期领先；服务 300+ 金融客户、200+ 资管公司</td></tr>
+    <tr><td>产品矩阵</td><td><strong>运营端</strong>：估值核算系统（V4.5→V5.5 信创版）、信息披露、大数据管理平台<br><strong>销售端</strong>：TA 系统（登记过户）、直销、反洗钱<br><strong>交易端</strong>：FOF/MOM、投研、银行间一体化交易<br><strong>管理端</strong>：业务管控、运营风险、信用风险预警、投资绩效</td></tr>
+    <tr><td>客户结构</td><td>公募基金（招商基金、平安基金、工银瑞信…）、券商资管（东吴证券…）、保险资管（人保资产、新华资产、长江养老…）、银行理财子、信托、私募</td></tr>
+    <tr><td>当下关键词</td><td><em>信创国产化</em>（鲲鹏/麒麟/OceanBase/GaussDB，估值核算 V5.5 全栈信创）、<em>AI 智能运营</em>（智能估值、智能信披、异常预警）、新一代资产管理系统</td></tr>
+    <tr><td>可用话术</td><td>"我知道赢时胜这两年主推估值核算 V5.5 的信创版本，在招商基金、平安基金、人保资产这些头部机构都落地了。信创迁移场景下，<strong>新旧系统的数据一致性验证</strong>应该是测试压力最大的一环——这正好是我做渠道 7.0→8.0 升级回归时天天干的事。"</td></tr>
+  </table>
+
+  <div class="box b-gold">
+    <span class="t">💡 这一段是"信息差"加分项</span>
+    绝大多数候选人只知道"赢时胜是做金融软件的"。你能说出<strong>产品线 + 信创 + 客户名</strong>，并且把信创迁移的验证难点和自己的经历挂钩，面试官会立刻把你归到"懂行"那一档。
+  </div>
+
+  <h3>1.2 岗位职责（根据真实 JD 归纳）</h3>
+  <ul>
+    <li>负责金融业务测试场景设计与<strong>测试数据设计</strong>（注意：估值系统的测试数据要自己手工造，这是重点考点）</li>
+    <li>参与金融业务<strong>全流程测试</strong>：需求分析 → 用例设计 → 执行 → 缺陷跟踪 → 回归 → 联调</li>
+    <li>独立承担测试模块全周期，编制测试报告并推动问题闭环</li>
+    <li>从业务和数据角度协助相关人员定位问题（= 你要能用 SQL 和日志把问题指出来）</li>
+    <li>总结业务测试经验，提炼测试标准和模板</li>
+    <li>编写操作手册、测试报告等业务发布文档</li>
+    <li>参与新业务需求设计评审，从业务和测试角度给评审意见</li>
+    <li>适应<strong>项目驻场</strong>及阶段性加班</li>
+  </ul>
+
+  <h3>1.3 任职要求里的"硬门槛"</h3>
+  <table>
+    <tr><th style="width:190px">要求</th><th>你的对应弹药</th></tr>
+    <tr><td>本科，计算机/金融/会计相关</td><td>✅ 软件工程本科，专业对口</td></tr>
+    <tr><td>3-5 年测试经验，主导过完整项目测试周期</td><td>✅ 近 4 年，独立主导过渠道 7.0→8.0 升级回归</td></tr>
+    <tr><td><strong>具备基础会计知识（会计分录/财务报表）或金融业务理解（估值/支付/风控）</strong></td><td>⚠️ 半对：支付/资金结算经验有，会计与估值要补 → 见第 05 节</td></tr>
+    <tr><td>功能 + 接口 + 业务逻辑验证</td><td>✅ 功能/接口/回归全覆盖，报文级接口测试经验</td></tr>
+    <tr><td>熟练掌握 SQL，Oracle 经验优先</td><td>✅ 明确写了 Oracle/MySQL 多表复杂查询、造数</td></tr>
+    <tr><td>会 Java/Python 写自动化脚本</td><td>✅ pytest + Playwright + FastAPI 全栈，属于加分档</td></tr>
+    <tr><td>抗压、不玻璃心、跨部门协作</td><td>✅ 6 个月客户现场支持经历是最好的证明</td></tr>
+    <tr><td>文字表达功底、能设计复杂运算表格</td><td>✅ 10+ 份测试报告 + 能用 Excel 做手工核算底稿（明天可以主动提这点）</td></tr>
+  </table>
+
+  <h3>1.4 考察维度权重（推测，帮你分配复习精力）</h3>
+  <div class="fig">
+    <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="考察维度权重图">
+      <defs>
+        <linearGradient id="gA" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1c5fa8"/><stop offset="100%" stop-color="#3d8fd8"/>
+        </linearGradient>
+      </defs>
+      <text x="0" y="18" font-size="13" fill="#3d4451" font-weight="600">明天大概率的考察权重（用于决定今晚时间怎么花）</text>
+
+      <g font-size="13.5" fill="#16181d">
+        <text x="0" y="52">估值业务理解</text>
+        <rect x="150" y="38" width="330" height="20" rx="4" fill="url(#gA)"/>
+        <text x="492" y="53" fill="#b3261e" font-weight="700">35%　← 今晚重点补</text>
+
+        <text x="0" y="92">数据准确性验证能力</text>
+        <rect x="150" y="78" width="260" height="20" rx="4" fill="url(#gA)"/>
+        <text x="422" y="93" fill="#1a7f4b" font-weight="700">28%　← 你的强项</text>
+
+        <text x="0" y="132">测试方法论（用例设计/边界/回归）</text>
+        <rect x="150" y="118" width="175" height="20" rx="4" fill="url(#gA)"/>
+        <text x="337" y="133" fill="#1a7f4b" font-weight="700">18%　← 你的强项</text>
+
+        <text x="0" y="172">技术能力（SQL/日志/脚本）</text>
+        <rect x="150" y="158" width="120" height="20" rx="4" fill="url(#gA)"/>
+        <text x="282" y="173" fill="#1a7f4b" font-weight="700">13%　← 你的强项</text>
+
+        <text x="0" y="212">软素质（抗压/驻场/沟通）</text>
+        <rect x="150" y="198" width="55" height="20" rx="4" fill="url(#gA)"/>
+        <text x="217" y="213" fill="#6b7280" font-weight="700">6%</text>
+      </g>
+      <line x1="150" y1="240" x2="640" y2="240" stroke="#e3e6ec"/>
+      <text x="150" y="262" font-size="12.5" fill="#6b7280">结论：把你的强项（数据验证）讲透，比补全短板更划算；但业务理解的 35% 决定你是不是"可培养"。</text>
+    </svg>
+    <div class="cap">图 1：考察维度权重推测</div>
+  </div>
+</div>
+
+<!-- ============ 02 匹配度 ============ -->
+<h2 class="sec" id="s2"><span class="num">02</span>匹配度体检：你的优势与短板</h2>
+<p class="sec-desc">先想清楚"我为什么能来"，再想"我差什么、怎么圆"。</p>
+
+<div class="card">
+  <h3>2.1 优势映射表（把每一段经历翻译成"估值系统需要的能力"）</h3>
+  <table>
+    <tr><th style="width:230px">你的经历</th><th>翻译成估值系统需要的能力</th></tr>
+    <tr><td>资金管理系统：SQL 逐笔校验交易数据与状态</td><td><strong>分录级数据核对</strong>。估值系统每天要对上千条持仓、费用、损益做逐笔校验，是同一套动作。</td></tr>
+    <tr><td>银企直联：40+ 银行渠道报文比对自动化，2 人天 → 0.5 人天</td><td><strong>估值表自动比对</strong>。估值系统"系统算 vs 手工算""新系统 vs 老系统""我方 vs 托管行"三方比对的逻辑，与报文比对完全同构。</td></tr>
+    <tr><td>渠道 7.0→8.0 升级回归，配置迁移校验</td><td><strong>信创迁移验证</strong>。赢时胜正在做估值 V5.5 信创改造，"先平移后优化、数据核算与对账结果与原环境一致"就是你的日常。</td></tr>
+    <tr><td>维护 1900+ 条回归用例，独立出 10+ 份测试报告</td><td><strong>回归体系与文档能力</strong>。估值系统按月/按季迭代 + 监管规则变更，回归用例库是核心资产。</td></tr>
+    <tr><td>Java 白盒：沿 Controller/Service/Mapper 分层定位</td><td><strong>批处理与核算逻辑定位</strong>。估值跑批的 bug 基本都要靠读代码 + SQL + 日志三层交叉定位。</td></tr>
+    <tr><td>6 个月客户现场支持（UAT/上线/联调）</td><td><strong>驻场能力</strong>。赢时胜 JD 明确要求"适应项目驻场"，这一条直接命中。</td></tr>
+    <tr><td>上线前拦截银行节点配置错误（生产事故级）</td><td><strong>业务风险敏感度</strong>。估值系统一旦算错净值就是重大违规事件，这个案例是你的王牌。</td></tr>
+    <tr><td>FastAPI + Vue3 独立交付全栈工具，上线 1 年+、20+ 人使用</td><td><strong>测试开发能力</strong>。可以直接做估值数据核对工具、报表差异分析工具。</td></tr>
+    <tr><td>Claude Code / Cursor / pytest / Playwright</td><td><strong>AI 赋能测试</strong>。赢时胜战略重点是"AI 智能运营"，这条正好对上公司方向。</td></tr>
+  </table>
+
+  <h3>2.2 短板与补丁</h3>
+  <table>
+    <tr><th style="width:190px">短板</th><th>风险</th><th>明天怎么处理</th></tr>
+    <tr><td>没有估值核算直接经验</td><td><span class="tag t-must">高</span>被问到具体业务细节答不上来</td><td><strong>不装懂 + 展示方法论 + 展示已自学</strong>。用第 05 节的流程图和公式证明你已经把主干啃过一遍。</td></tr>
+    <tr><td>会计基础薄（分录/报表）</td><td><span class="tag t-high">中高</span>JD 明确写了这一条</td><td>今晚背熟第 05.4 节 8 个高频分录，够撑住一轮追问。</td></tr>
+    <tr><td>资金端 → 投资端的业务域跨越</td><td><span class="tag t-high">中高</span>面试官会怀疑迁移成本</td><td>用"底层同源"话术：都是<em>借贷记账 + 数据核对 + 批处理 + 外部对账</em>，只是科目从收付款换成持仓估值。</td></tr>
+    <tr><td>gap 5 个月</td><td><span class="tag t-mid">中</span>会被问"这段时间在做什么"</td><td>第 08 节有完整话术：装修收尾 + 系统性补 AI 工具链 + 求职，落点在"能力没断"。<strong>绝对不要只说"在找工作"</strong>。</td></tr>
+    <tr><td>期望 15-20k</td><td><span class="tag t-mid">中</span>可能高于该岗位预算</td><td>先问区间再报数；把"可接受范围"锚定在 14-18k 并强调看重平台与赛道。见第 08.3。</td></tr>
+  </table>
+
+  <div class="box b-purple">
+    <span class="t">🔑 你的"一句话定位"（贯穿全程反复强化）</span>
+    "我是一个<strong>懂账务、能写代码、能把人工核对变成自动化</strong>的金融业务测试。我做过的资金账务和贵司的估值核算，底层是同一种能力——把业务规则翻译成可验证的数据口径。"
+  </div>
+</div>
+
+<!-- ============ 03 自我介绍 ============ -->
+<h2 class="sec" id="s3"><span class="num">03</span>自我介绍逐字稿</h2>
+<p class="sec-desc">三个版本，明天用 2 分钟版。加了 <span class="tag t-mid">停顿</span> 标记的地方要慢下来，那是面试官记笔记的点。</p>
+
+<div class="card">
+  <h3>3.1 主版本：2 分钟（约 600 字，正常语速 110 秒）</h3>
+  <div class="script">
+    <span class="lead">【开场 · 20 秒】</span>
+    <p>面试官您好，我叫尹胜，武昌首义学院软件工程专业本科，2022 年毕业。近 4 年我一直在浙江保融科技做测试，方向是金融科技，负责<strong>资金管理系统</strong>和<strong>银企直联平台</strong>两条产品线，服务的客户是寿险、财险、基金这类金融机构，对接了 40 多家银行渠道。</p>
+
+    <span class="lead">【三个特点 · 60 秒】</span>
+    <p>我的工作有三个特点。</p>
+    <p><span class="hl">第一，以业务测试为主。</span>我参与的是需求评审、用例设计、执行、缺陷跟踪这一整条链路。主要手段是 SQL 逐笔校验交易数据和状态、看 Linux 和 k8s 日志定位问题，也会读 Java 代码，从 Controller 到 Service 到 Mapper 分层做白盒定位。资金管理这条核心业务线，我维护了大约 <strong>1900 条回归用例</strong>，也独立写过 10 份以上的技术测试报告和回归报告。</p>
+    <p><span class="hl">第二，在数据比对自动化上做过落地。</span>银企直联这块，渠道回归原来靠人工比报文，一轮要 <strong>2 个人天</strong>。我推动把日志回放到自动化比对平台，配置忽略节点、调优比对规则，最后单轮回归降到大约 <strong>0.5 个人天</strong>。另外还参与了自动部署模块，把单渠道部署从 3 分钟左右降到了 10 秒左右。</p>
+    <p><span class="hl">第三，我有测试开发的能力。</span>我用 FastAPI 加 Vue3 独立做了一个环境信息管理模块的全栈开发，上线一年多，管理 7 条产品线的环境部署信息，团队 20 多人在用。日常会用 Python 写 pytest 接口自动化、用 Playwright 做 UI 自动化，现在也在用 Claude Code、Cursor 这类 AI 工具辅助生成用例和脚本。</p>
+
+    <span class="lead">【一个案例 · 25 秒】</span>
+    <p>有一个我印象比较深的案例：有一次银行渠道升级上线前，我发现某家银行交互的一个<strong>关键节点名称配置错了</strong>。如果这么上线，客户那边的批量支付会直接失败，属于生产事故级别。最后是在上线前拦下来的。</p>
+
+    <span class="lead">【为什么来 · 25 秒】</span>
+    <p>我选择赢时胜，是因为我这几年的经验一直在金融后台核心系统这条线上——都是强数据一致性、强账务核对、强批处理的场景。而<strong>估值核算是资管运营里对准确性要求最高的环节</strong>。我理解它和我做过的资金账务在底层是对同一种能力的要求。我很希望能把我在数据核对、自动化比对、白盒定位上的经验迁移到估值这条线上，也愿意尽快把估值核算的业务知识补扎实。谢谢。</p>
+  </div>
+
+  <div class="box b-brand">
+    <span class="t">🎙️ 播报要点</span>
+    <ul style="margin:6px 0">
+      <li><strong>数字要重读</strong>：1900 条、2 人天 → 0.5 人天、3 分钟 → 10 秒、40 多家、20 多人。数字是可信度。</li>
+      <li><strong>不要说"我很努力/我学习能力强"</strong>——这些话要用事实替代（比如"我提前把估值核算的日终流程和净值计算公式整理了一遍"）。</li>
+      <li>全程<strong>不要超过 2 分 15 秒</strong>。超时会被打断，打断就丢分。</li>
+      <li>最后一句"谢谢"要留白，给对方接话的空间。</li>
+    </ul>
+  </div>
+
+  <h3>3.2 备用版本：1 分钟（HR 面或技术面追问"简单说一下"时用）</h3>
+  <div class="script">
+    <p>面试官好，我是尹胜，软件工程本科，近 4 年在浙江保融科技做金融科技测试，负责资金管理系统和银企直联平台，服务寿险、财险、基金客户，对接了 40 多家银行渠道。</p>
+    <p>我的核心能力有三个：<strong>一是业务与数据验证</strong>——习惯用 SQL 逐笔校验账务数据，配合日志和 Java 白盒分层定位问题，维护过 1900 多条回归用例；<strong>二是比对自动化</strong>——推动渠道报文比对自动化，把单轮回归从 2 人天压到 0.5 人天；<strong>三是测试开发</strong>——独立用 FastAPI 加 Vue3 交付过一个 20 多人使用的内部工具模块。</p>
+    <p>我一直做金融后台核心系统，想往资管运营方向深入，所以来应聘估值系统的业务测试。谢谢。</p>
+  </div>
+
+  <h3>3.3 极简版：30 秒（电话初筛 / 面试官赶时间时）</h3>
+  <div class="script">
+    <p>面试官好，我是尹胜。近 4 年做金融科技测试，负责资金管理和银企直联两条产品线，对接 40 多家银行渠道，主要做账务数据校验、接口报文测试和回归自动化，也独立做过全栈的测试工具开发。我长期在金融后台核心系统这条线上，想转到资管估值方向，所以来应聘贵司这个岗位。</p>
+  </div>
+</div>
+
+<!-- ============ 04 项目介绍 ============ -->
+<h2 class="sec" id="s4"><span class="num">04</span>项目介绍逐字稿 + 深挖追问预案</h2>
+<p class="sec-desc">"项目介绍"这道题，面试官要的不是流程复述，是<strong>你个人的技术判断和关键动作</strong>。所有版本都用 STAR，但把 70% 的篇幅放在 A（Action）。</p>
+
+<div class="box b-amber">
+  <span class="t">⚠️ 讲项目前先定战略</span>
+  <strong>只精讲 1 个主项目，另外 2 个用 30 秒带过。</strong>主项目选 <em>银企直联 DSP 渠道测试</em>——因为它和估值系统的测试场景最像：多外部数据源、报文/数据比对、批处理、账务一致性、升级回归。资金管理系统作为"业务纵深"补充，全栈工具作为"技术加分"补充。
+</div>
+
+<div class="card">
+  <h3>4.1 主项目：银企直联 DSP 渠道测试（完整版 2 分钟）</h3>
+  <div class="script">
+    <span class="lead">S · 背景（15 秒）</span>
+    <p>保融的资金管理系统是给寿险、财险、基金这些机构做资金结算的，上面对接 <strong>40 多家银行渠道</strong>。但银行之间的报文格式、前置机类型、证书、状态码都不一样，我们中间有一个 <strong>DSP 平台</strong>做统一适配：对上提供统一接口，对下适配各家银行。我负责的就是 DSP 渠道这条线的测试。</p>
+
+    <span class="lead">T · 我的责任（10 秒）</span>
+    <p>我要覆盖 40 多家银行渠道的接口测试，从升级、联调到验证上线全流程；同时负责渠道 <strong>7.0 升级到 8.0</strong> 这次大版本的回归验证。</p>
+
+    <span class="lead">A · 我具体做了什么（70 秒）</span>
+    <p><strong>第一是接口与报文层面的验证。</strong>余额、明细、单笔和批量支付、查询、回单、退票这些接口，我会去分析 XML、JSON、Map 三种报文结构和渠道配置，判断问题出在银行的返回，还是我们的配置或映射。举个例子：有一次升级上线前，我发现某家银行交互的<strong>关键节点名称配置错了</strong>——这个节点直接决定报文能不能被对方正确解析，如果上线，客户的批量支付会全部失败。我在上线前把它拦下来了。</p>
+    <p><strong>第二是把回归比对自动化。</strong>渠道回归原来是人拿着报文逐条比，一轮要 <strong>2 个人天</strong>，而且人比久了会漏。我把生产日志回放到自动化比对平台，把时间戳、流水号这类每次都变的字段配置成<strong>忽略节点</strong>，再按渠道、按接口分别调优比对规则集，最后单轮回归降到大约 <strong>0.5 个人天</strong>，而且是全量比对、不会漏。</p>
+    <p><strong>第三是白盒定位。</strong>渠道逻辑出问题的时候，我会读 Java 代码，沿分层去看是配置加载、报文组装还是状态码映射的问题，定位到具体位置后再配合开发做小范围修改，改完我做联调验证和回归。</p>
+
+    <span class="lead">R · 结果（15 秒）</span>
+    <p>最后完成了 40 多家银行渠道的接口测试和上线验证，主导了 7.0 到 8.0 的升级回归，保障 40 多家客户的渠道平稳上线，过程中没有发生因为渠道配置导致的生产问题。</p>
+  </div>
+
+  <h4>🔍 这个项目的高频追问与应答要点</h4>
+
+  <details>
+    <summary>报文比对平台的"忽略节点"是怎么设计的？</summary>
+    <div class="ans">
+      <p>核心思路是<strong>把"每次都会变、但不代表业务出错"的字段"噪声"和"真正的业务差异"分开</strong>。具体做法：</p>
+      <ul>
+        <li>忽略规则配置化：按<strong>渠道 + 接口</strong>维度维护一套忽略路径清单（类似 JSONPath），比如时间戳、流水号、加密签名、随机数。不写死在代码里，配置改了不用发版。</li>
+        <li>先全量比对再收敛：平台上线第一轮是全量比，把所有差异都列出来，我人工逐条确认——哪些是噪声、哪些是真差异。确认完把噪声沉淀成规则，下一轮就只剩真差异。</li>
+        <li>规则要"从宽到严"逐步收紧：一开始忽略范围给大一点，先保证平台跑通；跑稳之后再逐条收紧，避免忽略掉真正的业务字段。</li>
+      </ul>
+      <p><strong>迁移到估值场景：</strong>估值表比对其实是同一套逻辑——估值表里也有很多与业务无关的噪声（导出时间、操作人、序号码），真正的比对项是<em>科目代码、数量、成本、市值、估值增值、单位净值</em>这些。我可以把这套"先全量、再收敛规则、按维度维护清单"的方法直接搬过来。</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>40 多家渠道，你怎么保证都覆盖到了？用例怎么组织？</summary>
+    <div class="ans">
+      <p>两个层面：<strong>渠道维度的横向覆盖</strong> + <strong>业务维度的纵向覆盖</strong>。</p>
+      <ul>
+        <li><strong>横向（渠道）</strong>：先做渠道分类，按报文格式（XML/JSON/Map）、接入方式（前置机/文件/直连）、支持的业务能力（是否支持批量、是否支持退票）打标签。同类渠道抽一家做深度测试，其余做<em>同能力抽样 + 差异点专项</em>。这样避免 40 家平均用力但其实重复。</li>
+        <li><strong>纵向（业务）</strong>：以接口为主干，每个接口覆盖正常流、异常流、边界值。比如"批量支付"要覆盖：单笔成功、批量部分成功、金额为 0、超限额、账户状态异常、银行超时无返回、重复提交。</li>
+        <li><strong>回归集</strong>：把跑一遍发现过问题的用例<em>固化成"高价值回归集"</em>，每次升级必跑；其余做成抽样回归。这就是那 1900 多条用例的组织思路。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>你怎么确定一个差异是"系统的 bug"还是"银行返回的数据就是错的"？</summary>
+    <div class="ans">
+      <p>三步定位，本质是<strong>往回追数据来源</strong>：</p>
+      <ol>
+        <li><strong>先看原始数据</strong>：把银行返回的原始报文/文件调出来，看报文本身是什么值。如果银行返回的就是错的，那问题不在我们。</li>
+        <li><strong>再看解析与映射</strong>：如果报文没问题，就看我们 DSP 的解析和字段映射对不对，包括状态码映射表、金额单位（分/元）、字符编码。</li>
+        <li><strong>最后看业务处理</strong>：如果解析没问题，再往上看资金系统的账务处理逻辑，用 SQL 查交易流水和状态字段，读 Java 代码看分支条件。</li>
+      </ol>
+      <p>关键习惯是：<em>在报 bug 之前先把"银行侧 / 我们侧"这个边界划清楚</em>，这样开发不会来回扯皮，也能减少误报。这个习惯在估值场景同样适用——差异要先判断是<strong>行情源的问题、还是我们计算的问题</strong>。</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>7.0 到 8.0 升级回归，你要验证什么？</summary>
+    <div class="ans">
+      <p>升级回归的核心命题不是"新功能对不对"，而是<strong>"老业务在新版本上结果不变"</strong>。我主要验证三块：</p>
+      <ul>
+        <li><strong>配置迁移的完整性</strong>：7.0 的渠道配置在 8.0 里是否全部正确迁移，有没有字段丢失、默认值被覆盖、枚举值映射错位。</li>
+        <li><strong>报文的一致性</strong>：同一笔业务在 7.0 和 8.0 下发出的报文是否一致，这就是我用自动化比对平台做的事。</li>
+        <li><strong>业务回归</strong>：把高价值回归集全量跑一遍，重点覆盖余额、支付、查询、退票这些主干。</li>
+      </ul>
+      <p><strong>直接挂钩赢时胜：</strong>我了解到贵司估值核算 V5.5 信创版本这两年落了很多头部客户，迁移时强调"先平移、后优化，先保证数据核算和对账结果与原环境一致"。这个思路和我做 7.0→8.0 是一模一样的——<em>先把一致性验证死，再谈性能优化</em>。</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>这段经历里最难的部分是什么？</summary>
+    <div class="ans">
+      <p>最难的是<strong>"用例的价值密度"和"升级面的广度"之间的矛盾</strong>。40 多家渠道 × 多个接口 × 多种业务场景，如果全量排列组合，用例数量会爆炸，跑不完；如果太粗，又怕漏掉生产问题。</p>
+      <p>我的解决方式是<strong>用风险倒推用例</strong>：回忆历史上出过生产问题的地方、客户投诉集中的渠道、和资金直接相关的接口（支付、退票），这些做成"必跑集"；其余按风险和变更范围抽样。另外把可比对的部分交给自动化，人的精力集中在需要判断的地方。</p>
+    </div>
+  </details>
+</div>
+
+<div class="card">
+  <h3>4.2 副项目 A：资金管理系统测试（30 秒带过版）</h3>
+  <div class="script">
+    <p>另一个项目是我负责的核心结算线。这是面向寿险、财险、基金的资金结算平台，覆盖账户全生命周期、收付款数据落地、审批、大额预警、支付和资金调拨。我做的是需求评审、业务与接口测试点梳理、用例设计与执行、用 SQL 校验交易数据和状态、配合日志定位问题。<strong>最后维护了大约 1900 条回归用例支撑版本回归，参与过 6 个月客户现场支持，独立写了 10 多份测试报告。</strong></p>
+  </div>
+  <div class="box b-brand">
+    <span class="t">如果面试官追问这个项目，往这三个方向答</span>
+    <ul style="margin:6px 0">
+      <li><strong>账务一致性怎么验</strong>：一笔收付款从"业务单 → 交易流水 → 账务凭证 → 科目余额"是全链路可追溯的，我用 SQL 从后往前勾稽，任何一环对不上都能定位到是哪一步断的。</li>
+      <li><strong>审批流怎么测</strong>：重点是节点、角色、金额阈值、串行/并行、驳回后的状态回滚，以及"驳回再提交"这种状态机边界。</li>
+      <li><strong>大额预警怎么测</strong>：阈值边界（等于阈值、略大于、略小于）、多币种换算、预警触发后的动作（是否阻断支付）。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h3>4.3 副项目 B：测试工具开发（30 秒带过版，用于证明"我能自己造工具"）</h3>
+  <div class="script">
+    <p>除了测试，我也做测试开发。我独立用 FastAPI + SQLAlchemy + MySQL + Vue3 加 Element Plus 做了一个<strong>环境信息管理模块</strong>，实现了增删改查、分页、Excel 批量导入、JWT 鉴权和基于角色的权限控制，上线一年多，管理 7 条产品线的环境部署信息，团队 20 多人日常在用。另外我还参与维护 DSP 自动化测试平台，做过自动部署模块和配置对比、日志归档工具，把单渠道部署从 3 分钟降到 10 秒左右。</p>
+  </div>
+  <div class="box b-green">
+    <span class="t">✅ 这个项目的用法</span>
+    不要在自我介绍里展开，<strong>等面试官问"你会写代码吗 / 做过什么工具"时再打出来</strong>，效果更好。它是你区别于普通功能测试的差异化筹码。
+  </div>
+</div>
+
+<!-- ============ 05 业务速成 ============ -->
+<h2 class="sec" id="s5"><span class="num">05</span>估值核算业务速成（今晚重点）</h2>
+<p class="sec-desc">这一节是明天的胜负手。目标不是成为基金会计，而是达到"能听懂、能接话、能问出有水平的问题"的程度。</p>
+
+<div class="card">
+  <h3>5.1 一句话理解估值核算</h3>
+  <div class="box b-gold">
+    <span class="t">核心定义</span>
+    估值核算 = <strong>每天收盘后，把一只资管产品持有的所有资产按规则重新算一遍值多少钱，减去负债，得到"基金资产净值"，再除以份额，得到"单位净值"，并生成对应的会计分录、科目余额表、财务报表，最后和托管行核对、对外披露。</strong>
+  </div>
+  <p>为什么它重要：单位净值直接决定投资者申购/赎回的价格。算错一分钱，就是<strong>投资者利益受损或不当得利</strong>，属于监管重点关注事件。所以这个系统对"准确性"的要求是金融系统里最高的一档，而且要求<strong>可追溯、可复核、可审计</strong>。</p>
+
+  <h4>业务全景流程图（背下来，面试时能画出来就是大加分）</h4>
+  <div class="fig">
+    <svg viewBox="0 0 660 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="估值核算日终流程">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#7b93b3"/>
+        </marker>
+      </defs>
+
+      <!-- Row 1 -->
+      <g>
+        <rect x="8" y="28" width="188" height="62" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+        <text x="102" y="53" text-anchor="middle" font-size="13.5" font-weight="700" fill="#123c6b">① 数据接入</text>
+        <text x="102" y="72" text-anchor="middle" font-size="11" fill="#3d4451">交易数据 / 行情 / TA 份额</text>
+
+        <rect x="236" y="28" width="188" height="62" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+        <text x="330" y="53" text-anchor="middle" font-size="13.5" font-weight="700" fill="#123c6b">② 校验与清洗</text>
+        <text x="330" y="72" text-anchor="middle" font-size="11" fill="#3d4451">去重 / 补缺 / 交易对账</text>
+
+        <rect x="464" y="28" width="188" height="62" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+        <text x="558" y="53" text-anchor="middle" font-size="13.5" font-weight="700" fill="#123c6b">③ 估值计算</text>
+        <text x="558" y="72" text-anchor="middle" font-size="11" fill="#3d4451">数量 × 估值价 → 市值</text>
+
+        <line x1="200" y1="59" x2="230" y2="59" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+        <line x1="428" y1="59" x2="458" y2="59" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+        <path d="M558,92 L558,112 L102,112 L102,124" stroke="#7b93b3" stroke-width="1.6" fill="none" marker-end="url(#ar)" stroke-dasharray="5 3"/>
+      </g>
+
+      <!-- Row 2 -->
+      <g>
+        <rect x="8" y="126" width="188" height="62" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+        <text x="102" y="151" text-anchor="middle" font-size="13.5" font-weight="700" fill="#4a2d7a">④ 费用计提</text>
+        <text x="102" y="170" text-anchor="middle" font-size="11" fill="#3d4451">管理费 / 托管费 / 业绩报酬</text>
+
+        <rect x="236" y="126" width="188" height="62" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+        <text x="330" y="151" text-anchor="middle" font-size="13.5" font-weight="700" fill="#4a2d7a">⑤ 损益结转·制证</text>
+        <text x="330" y="170" text-anchor="middle" font-size="11" fill="#3d4451">生成会计凭证</text>
+
+        <rect x="464" y="126" width="188" height="62" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+        <text x="558" y="151" text-anchor="middle" font-size="13.5" font-weight="700" fill="#4a2d7a">⑥ 科目余额·报表</text>
+        <text x="558" y="170" text-anchor="middle" font-size="11" fill="#3d4451">资产负债表 / 利润表</text>
+
+        <line x1="200" y1="157" x2="230" y2="157" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+        <line x1="428" y1="157" x2="458" y2="157" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+        <path d="M558,190 L558,210 L102,210 L102,222" stroke="#7b93b3" stroke-width="1.6" fill="none" marker-end="url(#ar)" stroke-dasharray="5 3"/>
+      </g>
+
+      <!-- Row 3 -->
+      <g>
+        <rect x="8" y="224" width="188" height="62" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="102" y="249" text-anchor="middle" font-size="13.5" font-weight="700" fill="#8a6500">⑦ 生成估值表</text>
+        <text x="102" y="268" text-anchor="middle" font-size="11" fill="#3d4451">成本 / 市值 / 估值增值</text>
+
+        <rect x="236" y="224" width="188" height="62" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="330" y="249" text-anchor="middle" font-size="13.5" font-weight="700" fill="#8a6500">⑧ 与托管行核对</text>
+        <text x="330" y="268" text-anchor="middle" font-size="11" fill="#3d4451">差异定位 / 反馈确认</text>
+
+        <rect x="464" y="224" width="188" height="62" rx="9" fill="#e9f7ef" stroke="#1a7f4b" stroke-width="1.5"/>
+        <text x="558" y="249" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f5c35">⑨ 净值披露</text>
+        <text x="558" y="268" text-anchor="middle" font-size="11" fill="#3d4451">T+1 公布单位净值</text>
+
+        <line x1="200" y1="255" x2="230" y2="255" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+        <line x1="428" y1="255" x2="458" y2="255" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar)"/>
+      </g>
+
+      <text x="8" y="308" font-size="11.5" fill="#6b7280">闭环：① 交易数据里也包含 T 日申赎申请 → 影响份额 → 影响单位净值；⑧ 核对不一致要回退重跑（回到 ③ 或 ②）。</text>
+    </svg>
+    <div class="cap">图 2：估值核算日终处理流程（面试能画出来 = 加分）</div>
+  </div>
+
+  <div class="box b-brand">
+    <span class="t">📌 用你自己的话复述一遍（练三遍）</span>
+    "T 日收盘后，系统先接入三类数据——交易数据、行情数据、TA 的份额数据，校验清洗之后开始估值：按持仓数量乘以估值价算出市值，加上现金和应收款得到资产总值，减去负债得到资产净值。同时计提管理费、托管费这些费用，结转损益生成凭证，汇总出科目余额表和财务报表。最后生成估值表，跟托管行核对，T+1 日对外公布单位净值。"
+  </div>
+</div>
+
+<div class="card">
+  <h3>5.2 五个必须记住的公式</h3>
+  <div class="fig">
+    <svg viewBox="0 0 660 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="净值计算逻辑">
+      <rect x="8" y="12" width="644" height="46" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.4"/>
+      <text x="330" y="40" text-anchor="middle" font-size="14" fill="#123c6b" font-weight="700">基金资产总值 ＝ Σ(持仓数量 × 估值价) ＋ 银行存款 ＋ 应收款项 ＋ 其他资产</text>
+
+      <text x="330" y="82" text-anchor="middle" font-size="20" fill="#b8860b" font-weight="700">−</text>
+
+      <rect x="8" y="94" width="644" height="46" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.4"/>
+      <text x="330" y="122" text-anchor="middle" font-size="14" fill="#8a6500" font-weight="700">基金负债合计 ＝ 应付赎回款 ＋ 应付管理人报酬 ＋ 应付托管费 ＋ 应交税费 ＋ 其他负债</text>
+
+      <text x="330" y="164" text-anchor="middle" font-size="20" fill="#1a7f4b" font-weight="700">＝</text>
+
+      <rect x="8" y="176" width="312" height="50" rx="9" fill="#e9f7ef" stroke="#1a7f4b" stroke-width="1.4"/>
+      <text x="164" y="199" text-anchor="middle" font-size="13.5" fill="#0f5c35" font-weight="700">基金资产净值（NAV）</text>
+      <text x="164" y="216" text-anchor="middle" font-size="11" fill="#3d4451">资产总值 − 负债合计</text>
+
+      <rect x="340" y="176" width="312" height="50" rx="9" fill="#1c5fa8"/>
+      <text x="496" y="199" text-anchor="middle" font-size="13.5" fill="#fff" font-weight="700">单位净值 ＝ NAV ÷ 基金总份额</text>
+      <text x="496" y="216" text-anchor="middle" font-size="11" fill="#d7e6f7">精确到 0.0001 元，第 5 位四舍五入</text>
+    </svg>
+    <div class="cap">图 3：净值计算逻辑</div>
+  </div>
+
+  <table>
+    <tr><th style="width:230px">公式</th><th>说明与考点</th></tr>
+    <tr>
+      <td><strong>基金资产净值 NAV</strong><br>= 资产总值 − 负债合计</td>
+      <td>估值表的核心输出之一。<strong>测试点</strong>：逐项核对资产/负债明细加总是否正确，有没有漏项（比如易漏的"应收利息""应付交易费用"）。</td>
+    </tr>
+    <tr>
+      <td><strong>单位净值</strong><br>= NAV ÷ 总份额</td>
+      <td>精确到 <code>0.0001</code> 元，小数点后第 5 位四舍五入。<strong>测试点</strong>：份额为 0 怎么处理、四舍五入产生的尾差如何归属、精度是否与合同约定一致。</td>
+    </tr>
+    <tr>
+      <td><strong>累计净值</strong><br>= 单位净值 + 累计每份分红</td>
+      <td>用于展示产品成立以来的总回报。<strong>测试点</strong>：分红后单位净值下降但累计净值不变。</td>
+    </tr>
+    <tr>
+      <td><strong>估值增值（浮动盈亏）</strong><br>= 市值 − 成本总额</td>
+      <td>估值表里"成本"和"市值"分列，差额就是估值增值。这是和账务系统最容易对不上的地方。<strong>测试点</strong>：卖出后成本是否按移动加权平均正确结转。</td>
+    </tr>
+    <tr>
+      <td><strong>当日每万份收益</strong><br>= 当日净收益 ÷ 总份额 × 10000</td>
+      <td>货币基金专用（单位净值恒为 1.0000）。<strong>测试点</strong>：除以份额的基数取当日还是前一日。</td>
+    </tr>
+    <tr>
+      <td><strong>七日年化收益率</strong><br>= (最近 7 日每万份收益之和 ÷ 10000 ÷ 7) × 365 × 100%</td>
+      <td>货币基金对外披露的核心指标。<strong>测试点</strong>：7 个自然日还是 7 个交易日、节假日收益怎么算、缺失日如何补。</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>5.3 估值方法（知道这几种就够接话）</h3>
+  <table>
+    <tr><th style="width:150px">资产类别</th><th>估值方法</th><th>关键考点</th></tr>
+    <tr>
+      <td><strong>股票</strong></td>
+      <td>取估值日交易所挂牌<strong>收盘价</strong>；当日无交易则取最近交易日收盘价</td>
+      <td>停牌股票要改用<strong>指数收益法</strong>或可比公司法；长期停牌要提示估值调整风险</td>
+    </tr>
+    <tr>
+      <td><strong>债券</strong></td>
+      <td>取<strong>第三方估值机构</strong>（中债 / 中证）提供的当日估值净价</td>
+      <td>净价 vs 全价（全价 = 净价 + 应计利息）；含权债取唯一估值净价；跨市场债要选对市场</td>
+    </tr>
+    <tr>
+      <td><strong>货币基金持仓</strong></td>
+      <td><strong>摊余成本法</strong>（成本列示，溢价折价在剩余存续期内按实际利率法摊销，每日计提损益）</td>
+      <td>配<strong>影子定价</strong>做偏离度监控（见下方专条）</td>
+    </tr>
+    <tr>
+      <td><strong>开放式基金</strong></td>
+      <td>取该基金<strong>当日公布的净值</strong>（场外基金 T+1 才有，是典型的"数据未到位"场景）</td>
+      <td>未获取到当日行情时的降级处理，是高频生产问题</td>
+    </tr>
+    <tr>
+      <td><strong>非标 / 股权</strong></td>
+      <td>按协议或第三方估值报告（如非上市股权按协会估值指引）</td>
+      <td>数据依赖管理人提供，校验"是否按时提供、是否有用印"</td>
+    </tr>
+    <tr>
+      <td><strong>流通受限股票</strong></td>
+      <td>按证监会 13 号公告《证券投资基金估值业务的指导意见》，采用<strong>流动性折扣</strong>估值</td>
+      <td>折扣率由中债/中证提供；启用日期规则（当日 15:00 前启用为当日，否则次一工作日）</td>
+    </tr>
+    <tr>
+      <td><strong>股指期货</strong></td>
+      <td>每日无负债结算：保证金 + 浮动盈亏</td>
+      <td>保证金占用、当日平仓盈亏与持仓浮盈浮亏要分开</td>
+    </tr>
+    <tr>
+      <td><strong>回购</strong></td>
+      <td>买入返售金融资产（逆回购）按实际利率法计提利息</td>
+      <td>买入返售是资产、卖出回购是负债，容易记反</td>
+    </tr>
+  </table>
+
+  <div class="box b-gold">
+    <span class="t">⭐ 高价值知识点：摊余成本法 + 影子定价（货币基金，必被问）</span>
+    <p style="margin:6px 0">货币基金的资产以<strong>摊余成本法</strong>计价（不随市价波动），单位净值恒为 <code>1.0000</code>，投资者的收益通过<strong>每日结转份额</strong>实现。</p>
+    <p style="margin:6px 0">但摊余成本法可能和真实市价产生偏离，所以每个估值日还要用市价重新算一遍，叫<strong>影子定价</strong>。</p>
+    <p style="margin:6px 0"><strong>偏离度 = (影子定价 NAV − 摊余成本 NAV) ÷ 摊余成本 NAV</strong></p>
+    <ul style="margin:6px 0">
+      <li>负偏离度绝对值达到 <code>0.25%</code> → 管理人应在 <strong>5 个交易日内</strong>调整到 0.25% 以内</li>
+      <li>正偏离度绝对值达到 <code>0.5%</code> → 需采取暂停申购等措施</li>
+    </ul>
+    <p style="margin:6px 0"><strong>测试点</strong>：偏离度计算的分母口径、阈值触发后的系统动作、连续多日的趋势判断。这是典型的"业务规则型"测试用例，最能体现业务理解。</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>5.4 会计处理：记住这 8 个分录（能说出来就够）</h3>
+  <p>三大原则先记住：<strong>有借必有贷、借贷必相等、资产 = 负债 + 所有者权益</strong>。基金会计的科目体系大致是：资产类（证券投资、证券清算款、应收利息、应收股利）、负债类（应付管理人报酬、应付托管费、应付赎回款、应交税费）、所有者权益类（实收资本/份额、未分配利润、损益平准金）。</p>
+
+  <table>
+    <tr><th style="width:130px">业务场景</th><th>分录</th><th>测试关注点</th></tr>
+    <tr>
+      <td>买入股票</td>
+      <td>借：证券投资—成本<br>　　交易费用<br>贷：证券清算款</td>
+      <td>成本是否含费用、成交金额与手续费是否分开记录</td>
+    </tr>
+    <tr>
+      <td>卖出股票</td>
+      <td>借：证券清算款<br>贷：证券投资—成本<br>　　投资收益（或借方）</td>
+      <td><strong>成本按移动加权平均法结转</strong>，部分卖出时的成本计算是高频出错点</td>
+    </tr>
+    <tr>
+      <td>期末估值增值</td>
+      <td>借：证券投资—估值增值<br>贷：公允价值变动损益</td>
+      <td>估值增值的累计口径与本期发生额要能对上</td>
+    </tr>
+    <tr>
+      <td>计提管理费</td>
+      <td>借：管理人报酬<br>贷：应付管理人报酬</td>
+      <td>计提基数（前一日 NAV）、年费率 ÷ 365（或 360，看合同）、计提天数</td>
+    </tr>
+    <tr>
+      <td>计提托管费</td>
+      <td>借：托管费<br>贷：应付托管费</td>
+      <td>同上；两者费率不同，别混淆</td>
+    </tr>
+    <tr>
+      <td>应付赎回款</td>
+      <td>借：实收资本（减少份额）<br>　　未分配利润 / 损益平准金<br>贷：应付赎回款</td>
+      <td>赎回金额 = 份额 × 申请日净值；<strong>申赎用哪一天的净值</strong>是核心业务规则</td>
+    </tr>
+    <tr>
+      <td>收益分配（分红）</td>
+      <td>借：未分配利润 / 损益平准金<br>贷：应付收益</td>
+      <td>权益登记日 / 除息日 / 派现日的先后顺序与净值变化</td>
+    </tr>
+    <tr>
+      <td>结转损益</td>
+      <td>借：本期利润<br>贷：未分配利润</td>
+      <td>结转时点（日终/月末/年结）和规则</td>
+    </tr>
+  </table>
+
+  <div class="box b-green">
+    <span class="t">✅ 面试时的安全答法</span>
+    如果被问到具体分录说不准，就用这句：<em>"具体科目名我记得不够精确，但我知道这笔业务在逻辑上会影响哪几个方向——成本减少、损益增加、负债增加，借贷两边一定会平。我做验证的时候习惯是从业务单一路勾稽到凭证，只要借贷不平衡或者余额对不上，一定能定位到是哪一步。"</em> —— <strong>承认细节 + 展示方法论，比硬编科目名安全。</strong>
+  </div>
+</div>
+
+<div class="card">
+  <h3>5.5 估值系统的测试要点（把这一页当成明天的"方法论底牌"）</h3>
+
+  <h4>A. 数据准确性验证 —— 估值测试的第一命题</h4>
+  <ul>
+    <li><strong>三方比对</strong>：① 系统算的值 vs 手工 Excel 算的值；② 新版本算的值 vs 老版本算的值（升级/信创迁移场景）；③ 我方估值表 vs 托管行估值表。<em>这三条正好对应你做过的"日志回放比对"，可以直接类比。</em></li>
+    <li><strong>逐层勾稽</strong>：交易流水 → 估值明细 → 估值表 → 凭证 → 科目余额表 → 财务报表 → 净值公告。任何一层对不上，都要能往上游追到源头。</li>
+    <li><strong>交叉复核</strong>：持仓数量和 TA 系统/券商对账单核对；资金余额和银行流水核对；份额和 TA 核对。</li>
+  </ul>
+
+  <h4>B. 精度与尾差 —— 最容易出"高级 bug"的地方</h4>
+  <ul>
+    <li>净值精确到 0.0001 元，第 5 位四舍五入；要验证<strong>四舍五入的方向和累积误差</strong>。</li>
+    <li>费率计提涉及除法，要验证中间过程是否保留足够小数位，避免"先舍入再计算"导致累计偏差。</li>
+    <li>分红/结转份额场景下的<strong>尾差归属</strong>（尾差留给产品还是按持有人分摊）。</li>
+    <li>金额单位（元/分）、多币种汇率换算的精度。</li>
+  </ul>
+
+  <h4>C. 边界与异常场景（面试官最爱问"你怎么设计用例"）</h4>
+  <table>
+    <tr><th style="width:150px">类别</th><th>典型用例</th></tr>
+    <tr><td>边界</td><td>持仓数量为 0 / 金额为 0 / 份额为 0；净值为负（债基负成本）；费率恰好等于阈值；涨幅刚好触发预警线</td></tr>
+    <tr><td>日期边界</td><td>非交易日 / 节假日 / 半日交易；月末、季末、年末结转；产品成立日与终止日；除权除息日</td></tr>
+    <tr><td>数据异常</td><td>行情缺失 → 系统取历史价并提示"部分标的未获取当日行情"；数据重复导入；行情价格异常（跳空）</td></tr>
+    <tr><td>业务异常</td><td>T 日无申赎但有分红；同日既有申购又有赎回；赎回后份额为 0 的产品清盘</td></tr>
+    <tr><td>时序</td><td>日终跑批中断 → 回退重跑，数据是否会重复计算（<strong>幂等性</strong>）；先跑 A 产品再跑 B 产品是否有影响</td></tr>
+    <tr><td>并发/性能</td><td>全量产品跑批时长（T+1 出净值的时效要求）；多产品并行时资源争用</td></tr>
+  </table>
+
+  <div class="box b-purple">
+    <span class="t">💡 把这句话讲出来，面试官会记住你</span>
+    "我觉得估值系统的测试，和一般业务系统最大的差别是：<strong>一般的功能测试，验证的是'流程能不能走通'；估值测试验证的是'数字对不对'。</strong>所以我的习惯是，任何一个估值场景，我都会先想办法<em>用另一条独立路径把正确答案算出来</em>——手算、Excel、老系统、托管行的数据，然后两边比对。只有独立算出来并且一致，我才认为这个用例通过。这个习惯是我在做渠道报文比对的时候练出来的。"
+    <p style="margin:8px 0 0">—— 这段话把你的经历和岗位需求彻底缝合了，是明天最重要的输出之一。</p>
+  </div>
+
+  <h4>D. 如果被要求"现场设计一个估值相关的测试用例"</h4>
+  <p>直接套这个四步模板（<strong>结论先行</strong>）：</p>
+  <ol>
+    <li><strong>定口径</strong>："首先我要确认业务口径从哪来——产品合同里的费率和计提方式、监管估值指引、还有托管行的对账口径。"</li>
+    <li><strong>造数据</strong>："然后我会构造一个最小可验证的账套：一只产品、一笔买入、一条行情，这样我手工就能把正确答案算出来。"</li>
+    <li><strong>列验证点</strong>："验证点分三层：① 单笔交易的账务处理；② 汇总层的资产净值与单位净值；③ 输出层（估值表、凭证、报表）的一致性。"</li>
+    <li><strong>加异常</strong>："最后补异常：行情缺失、重复导入、跑批中断重跑、跨月结转。"</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h3>5.6 术语速查表（临阵磨枪用）</h3>
+  <table>
+    <tr><th style="width:170px">术语</th><th>一句话解释</th></tr>
+    <tr><td>估值核算</td><td>每日对产品资产重新计价，得出净值和会计结果的过程</td></tr>
+    <tr><td>估值表</td><td>记录某产品某日资产、负债、权益明细及净值结果的报表，是与托管行核对的核心凭据</td></tr>
+    <tr><td>单位净值</td><td>基金资产净值 ÷ 总份额，投资者申赎的计价基准（股票基金精确到 0.0001）</td></tr>
+    <tr><td>累计净值</td><td>单位净值 + 累计分红，反映成立以来总回报</td></tr>
+    <tr><td>估值增值 / 浮动盈亏</td><td>市值 − 成本总额，未实现的盈亏</td></tr>
+    <tr><td>摊余成本法</td><td>以买入成本列示、溢价折价按实际利率法在存续期摊销的计价方法（货币基金用）</td></tr>
+    <tr><td>影子定价</td><td>用市价重新估值以监控摊余成本法偏离度的技术</td></tr>
+    <tr><td>偏离度</td><td>影子定价净值与摊余成本净值的相对差异，有 0.25% / 0.5% 阈值</td></tr>
+    <tr><td>TA 系统</td><td>登记过户系统，管理投资人份额、申赎、分红，是估值系统的份额数据来源</td></tr>
+    <tr><td>T 日 / T+1</td><td>T 日为业务日，T+1 为下一工作日；公募基金 T 日净值在 T+1 日披露</td></tr>
+    <tr><td>日终批处理 / 跑批</td><td>T 日收盘后自动执行的估值计算任务，是估值系统的核心处理环节</td></tr>
+    <tr><td>制证 / 凭证</td><td>根据业务数据自动生成会计分录</td></tr>
+    <tr><td>科目余额表</td><td>各会计科目在某日的余额汇总，是凭证与财务报表之间的桥梁</td></tr>
+    <tr><td>损益平准金</td><td>基金会计特有科目，用于区分已实现和未实现收益在申赎中的归属</td></tr>
+    <tr><td>移动加权平均法</td><td>证券成本结转方法，卖出时按持仓平均成本结转</td></tr>
+    <tr><td>净价 / 全价</td><td>债券报价方式；全价 = 净价 + 应计利息</td></tr>
+    <tr><td>中债 / 中证估值</td><td>国内两大第三方债券估值数据来源</td></tr>
+    <tr><td>信创</td><td>信息技术应用创新（国产化替代），赢时胜 V5.5 的核心卖点（鲲鹏/麒麟/OceanBase 等）</td></tr>
+    <tr><td>与托管行核对</td><td>管理人算出的估值结果交托管行复核，不一致要查因并反馈</td></tr>
+    <tr><td>资管新规 / 新金融工具准则</td><td>影响金融资产分类（AC / FVOCI / FVTPL）与估值方式的监管规则</td></tr>
+  </table>
+</div>
+
+<!-- ============ 06 题库 ============ -->
+<h2 class="sec" id="s6"><span class="num">06</span>45 道高频预测题与答题框架</h2>
+<p class="sec-desc">按概率排序。<span class="tag t-must">必答</span> 的题要背到能脱口而出；<span class="tag t-high">高</span> 的题至少准备要点；<span class="tag t-mid">中</span> 的题有印象即可。</p>
+
+<div class="card">
+  <h3>A 组 · 业务理解类（占比最高，务必过一遍）</h3>
+
+  <details><summary><span class="tag t-must">必答</span>你了解基金估值核算吗？说说你的理解。</summary>
+  <div class="ans"><p>用第 05.1 的流程图讲：三类数据接入 → 校验清洗 → 估值计算 → 费用计提 → 制证 → 科目余额和报表 → 估值表 → 与托管行核对 → T+1 披露。最后补一句自己的判断："这块我目前是自己系统看的资料，主干流程和核心公式我梳理过，但具体的业务细节肯定不如实际做过的人，需要到岗后补。"<strong>坦诚 + 有准备</strong>，是跨业务候选人的最优解。</p></div></details>
+
+  <details><summary><span class="tag t-must">必答</span>基金资产净值和单位净值怎么算？</summary>
+  <div class="ans"><p>NAV = 资产总值 − 负债合计；资产总值 = Σ(持仓数量 × 估值价) + 银行存款 + 应收款等；单位净值 = NAV ÷ 总份额，精确到 0.0001 元，第 5 位四舍五入。可以补一句累计净值 = 单位净值 + 累计分红。</p></div></details>
+
+  <details><summary><span class="tag t-must">必答</span>如果系统算出来的净值和托管行不一致，你怎么排查？<span class="c" style="color:#b3261e"></span></summary>
+  <div class="ans">
+    <p>这题几乎一定会问，因为它是估值测试的日常。按"从大到小、从粗到细"的顺序：</p>
+    <ol>
+      <li><strong>先看差异的量级</strong>：如果差异很大（比如差几万），通常是漏记了某笔大额业务或某个科目；如果差异极小（0.0001 级别），基本是<strong>精度/舍入</strong>问题。</li>
+      <li><strong>再定位到具体科目</strong>：比对双方估值表的每一行，找出是哪几个科目不一致。这一步就是我做的"估值表比对"。</li>
+      <li><strong>按科目反推原因</strong>，常见五类：① <em>行情源不同</em>（我方用中债、托管用中证，或者停牌股估值方法不同）；② <em>费用计提口径不同</em>（计提基数、天数、费率起止日）；③ <em>场外数据未到位</em>（场外基金净值 T+1 才公布，或非标数据管理人未及时提供）；④ <em>份额数据未同步</em>（TA 数据未到或申赎确认延迟）；⑤ <em>精度处理不同</em>（先后舍入顺序）。</li>
+      <li><strong>最后落到验证</strong>：确认原因后要判断是系统 bug 还是数据时效问题。如果是 bug，用 SQL 从持仓明细往上追到凭证。</li>
+    </ol>
+    <p><strong>加分收尾：</strong>"我做过渠道报文比对，这套'先看量级、再定位到明细、再反推原因、最后固化规则'的思路是一样的。而且差异原因一旦确认，我会把它沉淀成比对规则，下次同类差异自动识别，不用再人工判断。"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-must">必答</span>一只主动型股票基金的日终估值流程是怎样的？</summary>
+  <div class="ans"><p>照第 05.1 复述。重点突出：数据接入（含当日行情、当日交易、TA 份额）→ 校验清洗 → 计算市值 → 计提费用 → 结转损益 → 生成凭证 → 出具估值表 → 与托管行核对 → T+1 披露净值。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>货币基金为什么用摊余成本法？什么是影子定价和偏离度？</summary>
+  <div class="ans"><p>见第 05.3 的专条。核心三点：货币基金要求净值稳定（恒为 1.0000），所以用摊余成本法屏蔽市价波动；影子定价用来监控偏离；负偏离 0.25% / 正偏离 0.5% 的阈值和处置动作。<strong>如果记不清数字，就说"有明确的阈值和处置时限要求，具体数值我记得是 0.25% 和 0.5% 这两个档位"。</strong></p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>管理费、托管费怎么计提？你觉得有哪些坑？</summary>
+  <div class="ans">
+    <p>按日计提：每日费用 = 计提基数 × 年费率 ÷ 365（部分产品用 360，看合同）。</p>
+    <p>坑主要在四个地方：① <strong>计提基数</strong>是当日 NAV 还是前一日 NAV；② <strong>天数口径</strong>是自然日还是交易日，节假日是否计提；③ <strong>费率</strong>是否分段（阶梯费率、有上下限）；④ <strong>起止日期</strong>——产品成立首日、终止当日、暂停估值期间是否计提，以及<strong>费率变更的生效日切换</strong>。这些正好是"业务规则型用例"的典型。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>什么是估值增值？它是怎么产生会计凭证的？</summary>
+  <div class="ans"><p>估值增值 = 市值 − 成本总额，也就是浮动盈亏。它每天随行情变动，系统按"本次估值增值 − 上次估值增值"算出本期变动额，生成公允价值变动损益的凭证。测试关注点：估值增值的<strong>累计数</strong>和本期发生额能否对上、卖出后估值增值是否正确清零。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>分红有哪些方式？对净值有什么影响？</summary>
+  <div class="ans"><p>常见两种：<strong>现金分红</strong>（分红后单位净值下降，累计净值不变，投资人拿到现金）和<strong>红利再投</strong>（把分红按除息日净值折成份额，份额增加、单位净值下降）。货币基金还有"每日结转份额"。测试关注点：权益登记日 / 除息日 / 发放日的顺序，除息日净值是否正确下降，红利再投的份额计算精度，以及<strong>除息日当天又发生申赎</strong>时的口径。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>如果某只产品今天的净值出现异常波动，你怎么定位？</summary>
+  <div class="ans">
+    <p>先按"是不是算错"和"是不是业务真实发生"两条路分。定位顺序：</p>
+    <ol>
+      <li><strong>看当日业务</strong>：有没有大额申赎、分红、大额交易？这些会让净值合法地跳变。</li>
+      <li><strong>看行情</strong>：持仓标的是否有异常价格（停牌、退市、行情录入错误、价格单位错）。</li>
+      <li><strong>看费用/损益</strong>：是否重复计提、跨期计提错误。</li>
+      <li><strong>看份额</strong>：TA 份额是否同步错误（份额算错会直接让单位净值变形）。</li>
+      <li><strong>落到数据层</strong>：用 SQL 逐层对账，从估值表追到凭证和流水。</li>
+    </ol>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>估值表里一般包含哪些内容？</summary>
+  <div class="ans"><p>五块：① <strong>基本信息</strong>（产品代码/名称、估值日期、币种）；② <strong>资产项目</strong>（银行存款、清算备付金、证券清算款、股票/债券/基金投资——分列成本、市值、估值增值，应收利息、应收股利等）；③ <strong>负债项目</strong>（应付赎回款、应付管理人报酬、应付托管费、应付交易费用、应交税费等）；④ <strong>所有者权益</strong>（实收资本/份额、未分配利润、损益平准金）；⑤ <strong>关键指标</strong>（资产总值、负债合计、资产净值、单位净值、累计净值、份额）。</p></div></details>
+
+  <details><summary><span class="tag t-mid">中</span>T 日行情数据缺失会怎么处理？</summary>
+  <div class="ans"><p>系统一般用最近一次收到的历史净值作为当日行情，同时在估值表和净值公告上提示"部分标的未获取当日行情"。特殊日期（申赎申请日、业绩报酬计提日）如果行情未在约定时点前提供，会走异常流程，影响份额确认和赎回款交收进度。这属于<strong>典型的降级处理场景</strong>，测试要验证提示是否准确、降级逻辑是否可回溯。</p></div></details>
+
+  <details><summary><span class="tag t-mid">中</span>什么是损益平准金？为什么基金会计要有这个科目？</summary>
+  <div class="ans"><p>作用是<strong>区分"申赎带来的份额变动"和"投资产生的真实损益"</strong>。当投资人申购/赎回时，带进来或带走的未分配利润部分，记入损益平准金，避免把投资人的申赎误当成基金的收益或亏损。如果答不上来，就说"这个科目我记得是用来在申赎时区分已实现/未实现收益归属的，具体规则我记得不细"。</p></div></details>
+</div>
+
+<div class="card">
+  <h3>B 组 · 测试方法论类</h3>
+
+  <details><summary><span class="tag t-must">必答</span>给你一个"基金申购/赎回"功能，你怎么设计测试用例？</summary>
+  <div class="ans">
+    <p>套第 05.5 的四步模板（定口径 → 造数据 → 列验证点 → 加异常）。展开：</p>
+    <ul>
+      <li><strong>正常流</strong>：申购确认份额、赎回确认金额；不同金额档位、不同费率档位；不同渠道（直销/代销）。</li>
+      <li><strong>边界值</strong>：最小申购金额、等于最小金额、低于最小值应拒绝；赎回全部份额（份额归零）；持有天数恰好等于费率分界点（如第 7 天、第 30 天赎回费率不同）。</li>
+      <li><strong>业务规则</strong>：T 日提交用哪一天的净值（QDII 是 T+1 甚至 T+2）；确认份额的小数位；手续费的收取方式。</li>
+      <li><strong>异常流</strong>：金额超过账户余额、产品暂停申赎、非交易日提交、重复提交、募集期/封闭期。</li>
+      <li><strong>数据一致性</strong>：申赎后 TA 份额、估值表份额、总份额三者一致；N+1 日的净值是否正确反映。</li>
+    </ul>
+  </div></details>
+
+  <details><summary><span class="tag t-must">必答</span>用例设计方法有哪些？在估值场景怎么用？</summary>
+  <div class="ans"><p>等价类、边界值、场景法、因果图/判定表、正交实验、错误推测。估值场景的关键差异是<em>要额外加一层"数据准确性"的验证设计</em>，也就是每个用例都要想清楚<strong>"正确答案从哪来"</strong>。举例：费率档位用等价类 + 边界值；计提规则用判定表（基数 × 天数口径 × 费率类型组合）；日终流程用场景法；精度问题用错误推测（历史上出过的舍入 bug 沉淀成用例）。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>测试数据你怎么造？估值系统的数据造数难在哪？</summary>
+  <div class="ans">
+    <p>分三层：<strong>基础数据</strong>（产品、账套、证券主数据）、<strong>业务数据</strong>（交易、持仓、行情、TA 份额）、<strong>结果数据</strong>（以便验证的期望值）。</p>
+    <p>难在三点：① <strong>构造要"能被手工验证"</strong>——数据量不能大，一只产品、一笔交易、一条行情，这样正确答案可以手算；② <strong>相互依赖</strong>——行情变了，市值、估值增值、净值、凭证全变，造数要成组造；③ <strong>时效敏感</strong>——很多场景依赖"日期"，要能模拟非交易日、月末年末。</p>
+    <p>我的做法是用 SQL 造数 + Excel 建"期望值底稿"：造数脚本跑完，Excel 里用公式把期望净值算出来，再和系统结果比。这个习惯和我在资金项目里用 SQL 校验账务数据是一样的。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>接口测试你怎么做的？报文怎么校验？</summary>
+  <div class="ans"><p>三段式：① <strong>接口文档与契约</strong>——先用 Postman 验证单个接口的入参出参、状态码、异常码；② <strong>业务链路</strong>——串起多个接口验证端到端结果和数据的落库情况；③ <strong>报文级校验</strong>——这是金融系统的特色，我做过 XML/JSON/Map 三种报文的比对，包括字段映射、金额单位、状态码映射，也做过日志回放 + 自动化比对，配置忽略节点过滤掉时间戳这类噪声字段。在估值场景，这套可以直接迁移到估值表比对和接口数据落库校验。自动化会用 pytest + requests 组织。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>一个版本要回归，你怎么保证覆盖率和效率？</summary>
+  <div class="ans"><p>核心是<strong>分层回归</strong>：① <strong>必跑集</strong>——核心业务主干 + 历史缺陷用例 + 与本次变更强相关的用例，每次必跑；② <strong>抽样集</strong>——按渠道/产品类型抽样；③ <strong>全量集</strong>——大版本（如升级）才跑。同时用自动化覆盖可比对、可重复的部分（接口、报文比对），人的精力放在需要业务判断的部分。我在资金项目里维护 1900 多条用例就是按这个思路分层组织的。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>发现一个缺陷，开发说"这不是 bug，是设计如此"，你怎么办？</summary>
+  <div class="ans">
+    <p>三步走，核心是<strong>把争论拉回到"依据"上</strong>：</p>
+    <ol>
+      <li><strong>先自证</strong>：再确认自己的理解对不对——查需求文档、产品合同、监管规定，看有没有明确口径。很多时候是需求文档没写清楚。</li>
+      <li><strong>拉齐口径</strong>：把"依据"摆出来（业务规则、历史版本行为、同业做法、托管行的口径），和开发、需求一起对齐。如果确实是设计如此但会引发业务问题，就升级到需求方决策。</li>
+      <li><strong>留痕</strong>：不管结论如何，都在缺陷单里记录结论和依据，避免以后重复扯皮。</li>
+    </ol>
+    <p>补一句我的体会：<em>在金融系统里，很多"设计如此"其实是"业务规则没被写清楚"</em>。我遇到过一次类似情况，最后是拉着需求一起把规则明确下来，并且补了用例。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-mid">中</span>你怎么保证自己不漏测？</summary>
+  <div class="ans"><p>三个习惯：① 用例评审（自己先自查一遍再拉人评审）；② 做"反向检查"——不是从功能出发，而是从<strong>数据流向</strong>出发，把一份数据的完整生命周期走一遍，看哪个环节没被覆盖；③ 缺陷复盘——每个生产问题都问"为什么测试没发现"，然后补成用例。我维护的 1900 多条用例里就沉淀了不少这类"事后补的用例"。</p></div></details>
+</div>
+
+<div class="card">
+  <h3>C 组 · 技术能力类</h3>
+
+  <details><summary><span class="tag t-must">必答</span>写一条 SQL：查某产品某日所有科目的余额。</summary>
+  <div class="ans">
+<pre><code><span class="kw">SELECT</span> a.fund_code, a.subject_code, s.subject_name,
+       a.beginning_balance, a.debit_amount, a.credit_amount, a.ending_balance
+<span class="kw">FROM</span>   t_subject_balance a
+<span class="kw">JOIN</span>   t_subject s <span class="kw">ON</span> s.subject_code = a.subject_code
+<span class="kw">WHERE</span>  a.fund_code = <span class="str">'000001'</span>
+  <span class="kw">AND</span>  a.balance_date = <span class="str">'2026-10-10'</span>
+<span class="kw">ORDER BY</span> a.subject_code;</code></pre>
+    <p>答题时口头补充一句："实际表名我不清楚，我说一下思路——科目余额表一般会按产品 + 会计期间 + 科目维度存储，字段包含期初余额、借方发生额、贷方发生额、期末余额，跟科目字典表关联取名称。"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>写一条 SQL：找出我方估值表和托管行估值表净值不一致的记录。</summary>
+  <div class="ans">
+<pre><code><span class="kw">SELECT</span> a.fund_code, a.nav_date,
+       a.unit_nav  <span class="kw">AS</span> our_nav,
+       b.unit_nav  <span class="kw">AS</span> cust_nav,
+       <span class="kw">ROUND</span>(a.unit_nav - b.unit_nav, 6) <span class="kw">AS</span> diff
+<span class="kw">FROM</span>   t_nav_our a
+<span class="kw">JOIN</span>   t_nav_cust b
+  <span class="kw">ON</span>  a.fund_code = b.fund_code
+ <span class="kw">AND</span>  a.nav_date  = b.nav_date
+<span class="kw">WHERE</span>  <span class="kw">ABS</span>(a.unit_nav - b.unit_nav) &gt; 0.0001;</code></pre>
+    <p>加分说明："这里不用 <code>=</code> 比较，因为浮点数比较会有精度问题；也不能直接减完比较，要先用 <code>ROUND</code> 归一到业务精度。另外我还会加一个 <code>FULL OUTER JOIN</code> 的版本，把只有一边有的记录也捞出来——<em>缺记录</em>往往比<em>数值不一致</em>更危险。"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>怎么查重复导入的数据？</summary>
+  <div class="ans">
+<pre><code><span class="kw">SELECT</span> fund_code, trade_date, serial_no, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> cnt
+<span class="kw">FROM</span>   t_trade_detail
+<span class="kw">GROUP BY</span> fund_code, trade_date, serial_no
+<span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt; 1;</code></pre>
+    <p>补充："我用业务唯一键（产品 + 日期 + 流水号）做分组找重复。这也说明<strong>数据导入的幂等性</strong>是估值系统必须验证的点——跑批中断后重跑，不能把数据算两遍。"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>怎么用 Python 比对两个 Excel 估值表？</summary>
+  <div class="ans">
+<pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+a = pd.read_excel(<span class="str">"估值表_我方.xlsx"</span>, sheet_name=<span class="str">"估值表"</span>)
+b = pd.read_excel(<span class="str">"估值表_托管行.xlsx"</span>, sheet_name=<span class="str">"估值表"</span>)
+
+<span class="cmt"># 按科目代码对齐，比较金额类字段</span>
+m = a.merge(b, on=<span class="str">"科目代码"</span>, how=<span class="str">"outer"</span>, suffixes=(<span class="str">"_我方"</span>, <span class="str">"_托管"</span>), indicator=<span class="kw">True</span>)
+
+<span class="cmt"># 1) 只在一方存在的科目（缺项）</span>
+only = m[m[<span class="str">"_merge"</span>] != <span class="str">"both"</span>]
+
+<span class="cmt"># 2) 双方都有但金额不一致</span>
+both = m[m[<span class="str">"_merge"</span>] == <span class="str">"both"</span>].copy()
+both[<span class="str">"差额"</span>] = (both[<span class="str">"市值_我方"</span>] - both[<span class="str">"市值_托管"</span>]).round(2)
+diff = both[both[<span class="str">"差额"</span>].abs() &gt; 0.005]
+
+<span class="kw">with</span> pd.ExcelWriter(<span class="str">"比对结果.xlsx"</span>) <span class="kw">as</span> w:
+    only.to_excel(w, sheet_name=<span class="str">"缺项"</span>, index=<span class="kw">False</span>)
+    diff.to_excel(w, sheet_name=<span class="str">"金额差异"</span>, index=<span class="kw">False</span>)</code></pre>
+    <p>这段代码可以现场讲，正好呼应你"报文比对自动化"的经历——思路完全一致：<strong>按业务键对齐 → 分"缺项"和"差异"两类输出 → 输出成可读的差异清单</strong>。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>跑批很慢，你怎么定位？</summary>
+  <div class="ans"><p>从外到内四层：① <strong>先拆时间</strong>——在日志里打时间戳，看是数据接入慢、还是计算慢、还是制证/汇总慢；② <strong>看数据量</strong>——是不是某个产品持仓特别多、行情数据量特别大；③ <strong>看 SQL</strong>——慢查询日志，看执行计划，有没有全表扫描、缺索引、笛卡尔积；④ <strong>看资源</strong>——CPU/内存/数据库连接数，是不是被并发任务抢了资源。我在原项目里参与过自动部署和平台维护，排查思路是先用日志定位到瓶颈环节，再往下钻。</p></div></details>
+
+  <details><summary><span class="tag t-mid">中</span>Linux 上你怎么查日志？</summary>
+  <div class="ans"><p><code>tail -f</code> 实时跟、<code>grep</code> 按关键字/时间/错误码过滤、<code>grep -C</code> 看上下文、<code>awk</code>/<code>sed</code> 做切分统计。在 k8s 环境用 <code>kubectl logs</code> 看 Pod 日志，必要时 <code>kubectl exec</code> 进容器看。核心是<strong>先按时间定位到异常时间段，再按关键字缩小范围，最后看堆栈和上下文</strong>。</p></div></details>
+
+  <details><summary><span class="tag t-mid">中</span>你怎么用 AI 工具辅助测试？</summary>
+  <div class="ans"><p>三个用法：① <strong>用例设计</strong>——把需求描述和业务规则给 AI，让它先出一版用例骨架，我再按业务经验补充和裁剪，效率能提升不少；② <strong>脚本生成</strong>——用 Cursor/Claude Code 生成 pytest 接口自动化和 Playwright UI 自动化脚本，我负责审查和调试；③ <strong>问题定位</strong>——把报错堆栈和 SQL 给它，辅助分析。</p><p>但我会守住一条线：<strong>AI 生成的用例和断言必须我自己复核</strong>，尤其是涉及金额和精度的断言，不能直接信。</p></div></details>
+</div>
+
+<div class="card">
+  <h3>D 组 · 行为与动机类</h3>
+
+  <details><summary><span class="tag t-must">必答</span>介绍一下你自己。</summary><div class="ans"><p>用第 03.1 的逐字稿。</p></div></details>
+  <details><summary><span class="tag t-must">必答</span>介绍一下你觉得最有挑战的项目。</summary><div class="ans"><p>用第 04.1 的主项目 + 第 04.1 的"最难的部分"追问答案。</p></div></details>
+  <details><summary><span class="tag t-must">必答</span>你为什么从上一家离职？</summary><div class="ans"><p>见第 08.1，配合"为什么来深圳"一起准备。</p></div></details>
+  <details><summary><span class="tag t-must">必答</span>这几个月没上班，你在做什么？</summary><div class="ans"><p>见第 08.2，这是必答题，话术必须背熟。</p></div></details>
+  <details><summary><span class="tag t-high">高</span>讲一个你发现的最有价值的问题。</summary><div class="ans"><p>直接用"银行关键节点名称配置错误"这个案例，按 STAR 讲：背景（渠道升级上线前）→ 你怎么发现的（比对新旧报文/核对配置项）→ 影响评估（客户批量支付全失败）→ 结果（上线前拦截，避免生产事故）。<strong>结尾升华</strong>："这件事让我形成一个习惯，上线前我一定会把'和外部系统交互的配置项'单独过一遍，因为这类问题一旦流到生产，影响面最大。"</p></div></details>
+  <details><summary><span class="tag t-high">高</span>讲一次你和别人有分歧、最后怎么解决的。</summary><div class="ans"><p>用"开发说设计如此"那个案例，重点讲<strong>你如何用依据（需求文档/业务规则）而不是情绪来推进</strong>，以及最后留痕、补用例的动作。</p></div></details>
+  <details><summary><span class="tag t-high">高</span>你能接受加班和驻场吗？</summary><div class="ans"><p>见第 08.4。要点：<strong>明确接受</strong>，但用事实支撑而不是空承诺——"我在原公司参与过 6 个月的客户现场支持，包括版本升级、联调和 UAT 验收，对驻场的工作节奏是熟悉的。"</p></div></details>
+  <details><summary><span class="tag t-high">高</span>你的缺点是什么？</summary><div class="ans"><p>见第 08.5。选一个"真实、可控、有改进动作"的，别选"我太追求完美"这种假答案。</p></div></details>
+  <details><summary><span class="tag t-mid">中</span>未来 3 年你的规划是什么？</summary><div class="ans"><p>"1 年内把估值核算的业务和产品吃透，能独立负责一条产品线或一批客户的测试；2-3 年往<strong>业务+测试开发复合</strong>方向走——用自动化把我踩过的重复劳动固化下来，同时能承担需求评审和方案评审的业务把关角色。" 这个规划同时对齐了岗位需求和公司"AI 智能运营"的方向。</p></div></details>
+  <details><summary><span class="tag t-mid">中</span>你对我们公司了解多少？</summary><div class="ans"><p>用第 01.1 的公司画像，重点抛"信创 + 估值 V5.5 + 客户名 + 数据一致性验证"这段，把球踢回给面试官。</p></div></details>
+  <details><summary><span class="tag t-mid">中</span>期望薪资是多少？</summary><div class="ans"><p>见第 08.3。核心原则：<strong>先问区间，晚报数字</strong>。</p></div></details>
+</div>
+
+<div class="card">
+  <h3>E 组 · 压力题（记住原则：不慌、不硬编、转向方法论）</h3>
+  <details><summary>你没做过估值，凭什么觉得你能做？</summary>
+  <div class="ans"><p>"我确实没做过估值，这一点我不回避。但我判断自己能做，有三个依据：<strong>第一</strong>，我做的是资金结算的账务测试，底层是同一套能力——借贷记账、数据勾稽、批处理、外部对账，只是标的从收付款换成了持仓估值；<strong>第二</strong>，估值系统最重的验证工作是'把系统结果和独立算出的正确答案比对'，这正是我做了四年、还专门做过自动化的事；<strong>第三</strong>，我提前把这套业务的日终流程、核心公式和估值方法梳理了一遍（可以简单说两三个点），说明我不需要很长的适应期。"</p></div></details>
+  <details><summary>这只产品净值算错了 0.0001，你觉得这是问题吗？</summary>
+  <div class="ans"><p>"是问题，而且是必须查清楚的问题。0.0001 元看起来微小，但基金份额可能有几十亿份，放大之后就是几十万的差异；更重要的是，它意味着<strong>计算逻辑或精度处理有偏差</strong>，今天错 0.0001，某天可能就错更多。我的处理方式是先定位是舍入顺序问题、还是某个科目漏了尾差，然后再判断是否需要回溯历史数据。"</p></div></details>
+  <details><summary>如果上线前一天你发现一个不影响主流程的 bug，你提不提？</summary>
+  <div class="ans"><p>"提，但会带上风险评估。我的做法是：先判断影响面——是不是只影响特定产品类型/特定场景、有没有绕过方式、是否影响数据准确性。如果只影响数据准确性——哪怕场景很窄——在金融系统里我会<strong>强烈建议阻塞上线</strong>；如果纯展示层问题，我会记录成已知问题并给出后续修复计划，让业务方决策。关键是不能替业务做决定，也不能自己咽下去。"</p></div></details>
+</div>
+
+<!-- ============ 07 反问 ============ -->
+<h2 class="sec" id="s7"><span class="num">07</span>反问环节：问什么显得专业</h2>
+<p class="sec-desc">反问是"最后一题"，问得好能把印象分拉回来。挑 3 个问，按面试官角色选。</p>
+
+<div class="card">
+  <h3>🥇 必问（同时暴露你的业务思考和务实态度）</h3>
+  <ul>
+    <li>"这个岗位具体是负责估值核算产品线的哪一块？是<strong>自研产品的版本测试</strong>，还是跟着项目做<strong>客户现场的交付测试</strong>？"<br><span style="color:#6b7280;font-size:13.5px">→ 显示你懂这两条路的工作形态完全不同。</span></li>
+    <li>"团队目前的测试和开发配比大概是多少？有没有专门的测试开发或自动化平台的同学支持？"<br><span style="color:#6b7280;font-size:13.5px">→ 显示你关心工程效率，而不是只做手工测试。</span></li>
+    <li>"日终跑批这块，测试同学需要在晚间或者次日凌晨值守吗？版本迭代的节奏大概是多久一轮？"<br><span style="color:#6b7280;font-size:13.5px">→ 显示你清楚估值系统的工作特性，是"懂行"的信号。</span></li>
+  </ul>
+
+  <h3>🥈 加分问（显示学习意愿和长期视角）</h3>
+  <ul>
+    <li>"我看到公司有金融业务知识的培训体系，新同学入职后一般是怎么补估值这块业务的？大概多久能独立负责？"</li>
+    <li>"贵司现在的估值核算 V5.5 信创版本在推进，这种迁移场景下，测试的主要挑战是在数据一致性验证上吗？"</li>
+    <li>"公司这两年提'AI 智能运营'，测试这边有没有已经在用 AI 做用例生成或差异分析之类的实践？"</li>
+  </ul>
+
+  <h3>🥉 兜底问（如果面试快结束、时间紧张，问这两个就够）</h3>
+  <ul>
+    <li>"如果我有幸入职，您希望我在前三个月做到什么程度算是合格？"</li>
+    <li>"这个岗位的工作地点是固定在深圳，还是需要长期驻客户现场？"</li>
+  </ul>
+
+  <div class="box b-red">
+    <span class="t">🚫 不要问</span>
+    <ul style="margin:6px 0">
+      <li>薪资、加班补贴、年假（留给 HR 面）</li>
+      <li>"贵司是做什么的？""估值系统是什么？"（说明你没做功课）</li>
+      <li>"我这个背景能进来吗？"（自我贬低）</li>
+      <li>"你们加班多吗？"（直接问会显得抗拒；改成上面的"跑批值守"问法，既得到答案又显得专业）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ 08 雷区 ============ -->
+<h2 class="sec" id="s8"><span class="num">08</span>雷区与话术</h2>
+<p class="sec-desc">这四道题几乎必然出现，话术今晚要念到顺口。</p>
+
+<div class="card">
+  <h3>8.1 "为什么从上一家离职？"</h3>
+  <div class="script">
+    <p>我在保融做了将近四年，收获很大，从功能测试一路做到能独立负责渠道线的测试和工具开发。离职主要是两个原因：一是我想换到深圳长期发展，这个决定和家庭规划有关；二是我希望往<strong>资管运营</strong>这条更核心的业务线深入——我原来做的是资金结算端，估值核算是资管运营里对业务理解要求最高的环节，我想往这个方向走。</p>
+  </div>
+  <div class="box b-amber">
+    <span class="t">⚠️ 三不要</span>不要抱怨前公司/领导/同事；不要说"钱少"；不要说"太累了"。<strong>要把它讲成一个"主动选择的转向"，而不是"被动离开"。</strong>
+  </div>
+
+  <h3>8.2 "这 5 个月在做什么？"（必答题）</h3>
+  <div class="script">
+    <p>这段时间我主要做了三件事。</p>
+    <p><strong>第一是完成了从杭州到深圳的搬迁和安顿</strong>，家里房子在收尾，需要有段时间处理。</p>
+    <p><strong>第二是有意识地在补 AI 工程能力。</strong>这段时间我系统性地用 Claude Code、Cursor 这类工具做开发实践，也把接口自动化（pytest）和 UI 自动化（Playwright）重新梳理了一遍实战流程。因为我很确定下一份工作要往"业务测试 + 提质提效"的复合方向走，这一块是我主动去补的。</p>
+    <p><strong>第三是求职和研究方向。</strong>我给自己定的方向很明确——继续做金融后台核心系统的测试，往资管估值这条线靠，所以这段时间也在看估值核算相关的业务资料。</p>
+  </div>
+  <div class="box b-green">
+    <span class="t">✅ 这段话的设计逻辑</span>
+    把 gap 从"空窗"改写成"<strong>能力保鲜期 + 方向确定期</strong>"。最关键的是最后一句——<em>正好可以把话题引到第 05 节的估值知识上，让面试官觉得你不是在找工作，是在为这个岗位做准备。</em>
+  </div>
+
+  <h3>8.3 薪资怎么谈</h3>
+  <table>
+    <tr><th style="width:150px">场景</th><th>话术</th></tr>
+    <tr><td>面试官先问期望</td><td>"我目前更关注的是岗位和平台是否匹配，薪资方面我相信贵司有比较成熟的职级体系。方便的话，您能先介绍一下这个岗位的薪资区间吗？"</td></tr>
+    <tr><td>被追问一定要说数字</td><td>"结合我在杭州 4 年的经验和现在做的技术储备，我的期望是 <strong>15-18K</strong>。不过我更看重的是这个岗位能不能让我在估值这条线上长期沉淀，所以具体可以再谈。"</td></tr>
+    <tr><td>对方报的低于预期</td><td>"我理解。想确认一下，这之外还有绩效、项目奖金或者补贴部分吗？另外如果业务能力成长得快，调薪的周期和幅度大概是怎样的？"</td></tr>
+  </table>
+  <div class="box b-amber">
+    <span class="t">⚠️ 提醒</span>
+    从公开的招聘数据看，赢时胜测试岗的社招区间可能在 <strong>12-18K</strong> 左右（应届 8.5-9.5K，中级社招看经验）。你期望 15-20K 属于该区间上沿。<strong>明天的目标不是守住数字，是拿到 offer 并保留谈判空间。</strong>所以第一轮尽量让对方先报数。
+  </div>
+
+  <h3>8.4 "能接受加班和驻场吗？"</h3>
+  <div class="script">
+    <p>可以。我在原公司参与过 6 个月的客户现场支持，那段时间是做版本升级、联调和 UAT 验收，包括现场和客户业务人员一起对数据、跑流程，对驻场的节奏和沟通方式我是熟悉的。上线期间和月末、季末这种高峰节点的加班，我也经历过——资金系统月末对账和版本上线经常要晚上跑，我是能适应的。</p>
+  </div>
+  <div class="box b-brand">
+    <span class="t">💡 关键技巧</span>
+    不要只说"可以"，要说"<strong>可以，因为我做过，我知道是什么样</strong>"。前者是承诺，后者是经验。
+  </div>
+
+  <h3>8.5 "你的缺点是什么？"</h3>
+  <div class="script">
+    <p>我比较明显的一个问题是<strong>在业务细节的表达上不够精炼</strong>。我做事习惯把前因后果都讲清楚，给开发提缺陷的时候经常写得很长，好处是定位信息全，但有时候会让对方抓不住重点。<br>
+    我意识到之后做了两个调整：一是提缺陷先写"一句话结论"，再展开细节；二是写报告会先列要点再补内容。现在反馈好了很多，但我觉得还可以再改进。</p>
+  </div>
+  <div class="box b-amber">
+    <span class="t">⚠️ 选择原则</span>
+    缺点要满足三条：<strong>真实</strong>（不是"我太追求完美"）、<strong>不致命</strong>（不能是"我不细心"——测试岗最忌讳）、<strong>有改进行动</strong>。上面这个"表达不够精炼"就很合适，因为它同时还暗示了你的优点（信息全面、写得详细）。
+  </div>
+
+  <h3>8.6 另外三个要小心的坑</h3>
+  <ul>
+    <li><strong>不要贬低原公司或原业务</strong>。即使你很想转方向，也要说"资金结算这块让我打下了账务和数据验证的底子"。</li>
+    <li><strong>不要在业务术语上瞎编</strong>。编错一个词（比如把"摊余成本法"说成通用方法）比承认不会更致命。安全句式：<em>"这块我理解得不够细，我的理解是……，如果有偏差请您指正。"</em></li>
+    <li><strong>不要说"我什么都能学"</strong>。要说"我已经学了什么、还能学什么"，用事实替代态度。</li>
+  </ul>
+</div>
+
+<!-- ============ 09 速览卡 ============ -->
+<h2 class="sec" id="s9"><span class="num">09</span>面试前 1 小时速览卡</h2>
+<p class="sec-desc">明早出门前只看这一页。可以单独打印。</p>
+
+<div class="flash">
+  <h3>⏰ 出门前自检</h3>
+  <div class="row">
+    <div class="mini"><b>材料</b><span>简历纸质版 2 份、身份证、笔和本子</span></div>
+    <div class="mini"><b>时间</b><span>提前 15 分钟到；路上再看一遍本页</span></div>
+    <div class="mini"><b>状态</b><span>语速放慢 10%，回答前先停 1 秒</span></div>
+  </div>
+
+  <h3>🎤 自我介绍"五句骨"（卡住就按这个顺序说）</h3>
+  <ol>
+    <li><strong>我是谁</strong>：尹胜，软件工程本科，近 4 年金融科技测试，资金管理 + 银企直联两条产品线，40+ 银行渠道。</li>
+    <li><strong>我能做什么</strong>：业务测试为主——SQL 逐笔校验账务、日志定位、Java 白盒分层查问题；维护 1900+ 回归用例。</li>
+    <li><strong>我做过什么提效</strong>：推动报文比对自动化，单轮渠道回归 2 人天 → 0.5 人天。</li>
+    <li><strong>我还能写代码</strong>：FastAPI + Vue3 独立交付过 20+ 人使用的内部工具；会用 pytest / Playwright / AI 编程工具。</li>
+    <li><strong>为什么来</strong>：一直做金融后台核心系统，想深入资管估值；资金账务和估值核算底层是同一种能力。</li>
+  </ol>
+
+  <h3>💎 三句要背下来能脱口而出的话</h3>
+  <div class="box b-purple" style="margin:8px 0">
+    <p style="margin:4px 0"><strong>① 定位句（贯穿全程）</strong><br>"我是一个懂账务、能写代码、能把人工核对变成自动化的金融业务测试。"</p>
+    <p style="margin:4px 0"><strong>② 业务句（证明你做了功课）</strong><br>"估值核算是 T 日终接入交易、行情、TA 三类数据，算市值和净值，计提费用、生成凭证和估值表，与托管行核对后 T+1 披露净值。"</p>
+    <p style="margin:4px 0"><strong>③ 方法论句（最重要，把你和岗位缝在一起）</strong><br>"一般功能测试验证的是流程能不能走通，估值测试验证的是数字对不对。所以任何估值场景，我都会先用另一条独立路径把正确答案算出来，两边比对一致才认为通过——这个习惯是我做渠道报文比对时练出来的。"</p>
+  </div>
+
+  <h3>🔢 五个必须记住的数字</h3>
+  <table>
+    <tr><td style="width:130px">净值精度</td><td>单位净值精确到 <strong>0.0001 元</strong>，第 5 位四舍五入</td></tr>
+    <tr><td>货币基金偏离度</td><td>负偏离 <strong>0.25%</strong>（5 个交易日内调整）、正偏离 <strong>0.5%</strong></td></tr>
+    <tr><td>你的提效成绩</td><td>回归 <strong>2 人天 → 0.5 人天</strong>；部署 <strong>3 分钟 → 10 秒</strong>；用例 <strong>1900+</strong>；渠道 <strong>40+</strong></td></tr>
+    <tr><td>公司坐标</td><td>赢时胜，创业板 <strong>300377</strong>，估值核算 V5.5 信创版，服务 <strong>200+</strong> 资管公司</td></tr>
+    <tr><td>T 日 / T+1</td><td>T 日收盘后跑批，<strong>T+1 日披露单位净值</strong>，与托管行核对同步进行</td></tr>
+  </table>
+
+  <h3>🛟 三个救场句（答不上来时用）</h3>
+  <ul>
+    <li><strong>业务不懂时：</strong>"这块我目前的理解是……，但肯定不如实际做过的人准确，我愿意到岗后尽快补上。不过从测试的角度，我知道这类问题要验证什么——"（然后转回方法论）</li>
+    <li><strong>技术细节忘了时：</strong>"具体参数我记不精确了，我说一下我的思路——"</li>
+    <li><strong>被质疑经验不足时：</strong>"我确实没有估值系统的直接经验，但我想说两点：一是底层能力是同源的……；二是我提前做了准备……"</li>
+  </ul>
+
+  <h3>❓ 反问记住 2 个就够</h3>
+  <ul>
+    <li>"这个岗位是负责自研产品的版本测试，还是客户现场的交付测试？"</li>
+    <li>"日终跑批测试需要值守吗？版本迭代节奏大概多久一轮？"</li>
+  </ul>
+
+  <div class="box b-green" style="margin-top:16px">
+    <span class="t">🎯 最后一句给自己</span>
+    你不缺能力，缺的只是"把资金端的经验翻译成估值端语言"的那一步。这一步今天已经做完了。<strong>明天正常发挥就好。</strong>
+  </div>
+</div>
+
+<!-- ============ 附录 ============ -->
+<h2 class="sec"><span class="num">A</span>附录：信息来源</h2>
+<div class="card">
+  <ul style="font-size:13.5px;color:#3d4451">
+    <li>赢时胜官网产品矩阵与新闻动态 —— <a href="http://www.ysstech.com" target="_blank">www.ysstech.com</a></li>
+    <li>深圳市赢时胜信息技术股份有限公司 2025 年半年度报告（深交所披露）—— 资管核算业务、信创进展、客户规模</li>
+    <li>赢时胜估值核算系统 V5.5 信创版落地案例（招商基金、平安基金、人保资产、东吴证券、长江养老等，公开报道）</li>
+    <li>赢时胜测试岗招聘信息（智联招聘 / BOSS 直聘 / 高校就业网）—— 岗位职责与任职要求归纳</li>
+    <li>《证券投资基金会计核算办法》相关公募基金招募说明书"基金资产净值的计算和会计核算"章节 —— 净值计算、估值方法、摊余成本法与影子定价</li>
+    <li>证监会 2017 年第 13 号公告《中国证监会关于证券投资基金估值业务的指导意见》—— 流通受限股票估值</li>
+  </ul>
+  <div class="box b-amber">
+    <span class="t">⚠️ 使用提醒</span>
+    本手册中的业务规则（如偏离度阈值、净值精度、科目设置）为行业通行做法整理，<strong>不同产品合同与监管口径可能不同</strong>。面试时如被追问具体数值，用"我记得大致是……，具体要看产品合同约定"的表述，比直接断言更安全。
+  </div>
+</div>
+
+<div class="footer">
+  赢时胜 · 估值系统业务测试 · 面试作战手册　|　候选人：尹胜　|　生成日期：2026-10-11<br>
+  祝面试顺利 🎯
+</div>
+
+</div>
+</body>
+</html>
