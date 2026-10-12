@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赢时胜复试专项 · 估值做账（尹胜）</title>
+<style>
+  :root{
+    --ink:#16181d; --ink2:#3d4451; --ink3:#6b7280;
+    --bg:#f5f6f8; --card:#fff; --line:#e3e6ec;
+    --brand:#1c5fa8; --brand-l:#e8f0fa; --brand-d:#123c6b;
+    --gold:#b8860b; --gold-l:#fdf6e3;
+    --green:#1a7f4b; --green-l:#e9f7ef;
+    --red:#b3261e; --red-l:#fdecea;
+    --amber:#b45309; --amber-l:#fff7e6;
+    --purple:#6d4aa8; --purple-l:#f2edfb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+    font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px 70px;}
+
+  .cover{background:linear-gradient(135deg,#123c6b 0%,#1c5fa8 60%,#2a76c4 100%);
+    color:#fff;padding:40px 44px 34px;border-radius:0 0 20px 20px;margin-bottom:24px;position:relative;overflow:hidden;}
+  .cover::after{content:"";position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.07);}
+  .cover .kicker{font-size:13px;letter-spacing:3px;opacity:.8;margin-bottom:10px;}
+  .cover h1{margin:0 0 8px;font-size:29px;line-height:1.35;}
+  .cover h1 span{color:#ffd980;}
+  .cover .sub{font-size:14.5px;opacity:.9;}
+  .cover .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;position:relative;z-index:2;}
+  .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:5px 13px;border-radius:999px;font-size:13px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.04);}
+  h2.sec{font-size:21px;margin:40px 0 8px;padding-left:14px;border-left:5px solid var(--brand);line-height:1.3;color:var(--brand-d);}
+  h2.sec .num{display:inline-block;background:var(--brand);color:#fff;font-size:13px;padding:2px 9px;border-radius:6px;margin-right:10px;vertical-align:3px;font-weight:400;}
+  .sec-desc{color:var(--ink3);font-size:13.5px;margin:0 0 14px 19px;}
+  h3{font-size:17px;margin:24px 0 10px;color:var(--brand-d);}
+  h3:first-child{margin-top:0;}
+  h4{font-size:15px;margin:16px 0 8px;}
+  p{margin:9px 0;}
+  ul,ol{margin:9px 0;padding-left:22px;}
+  li{margin:5px 0;}
+  strong{color:var(--brand-d);}
+  em{font-style:normal;background:linear-gradient(transparent 62%,#ffe9a8 62%);font-weight:600;}
+  code{background:#f1f3f7;padding:2px 6px;border-radius:4px;font-family:Consolas,monospace;font-size:13.5px;color:#a13d1f;}
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:#f0f4f9;color:var(--brand-d);font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfc;}
+
+  .box{border-radius:11px;padding:15px 20px;margin:14px 0;border-left:5px solid;}
+  .box .t{font-weight:700;display:block;margin-bottom:4px;font-size:14.5px;}
+  .b-brand{background:var(--brand-l);border-color:var(--brand);}
+  .b-gold{background:var(--gold-l);border-color:var(--gold);}
+  .b-green{background:var(--green-l);border-color:var(--green);}
+  .b-red{background:var(--red-l);border-color:var(--red);}
+  .b-amber{background:var(--amber-l);border-color:var(--amber);}
+  .b-purple{background:var(--purple-l);border-color:var(--purple);}
+  .b-gold .t{color:var(--gold);} .b-green .t{color:var(--green);}
+  .b-red .t{color:var(--red);} .b-amber .t{color:var(--amber);}
+  .b-purple .t{color:var(--purple);} .b-brand .t{color:var(--brand-d);}
+  .b-red strong{color:var(--red);}
+
+  .script{background:#fbfcfe;border:1px dashed #b9cbe4;border-radius:12px;padding:16px 22px;margin:13px 0;line-height:2;font-size:14.5px;}
+  .script .lead{font-weight:700;color:var(--brand);display:block;margin-bottom:5px;}
+
+  details{border:1px solid var(--line);border-radius:10px;margin:9px 0;background:#fff;overflow:hidden;}
+  details[open]{border-color:#b9cbe4;box-shadow:0 2px 8px rgba(28,95,168,.07);}
+  summary{cursor:pointer;padding:12px 18px;font-weight:600;list-style:none;display:flex;gap:10px;background:#fafbfc;user-select:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"Q";flex:0 0 22px;height:22px;line-height:22px;text-align:center;background:var(--brand);color:#fff;border-radius:5px;font-size:12px;margin-top:3px;}
+  details[open] summary{background:#f0f4f9;border-bottom:1px solid var(--line);}
+  .ans{padding:14px 20px 18px 50px;position:relative;}
+  .ans::before{content:"A";position:absolute;left:18px;top:16px;width:22px;height:22px;line-height:22px;text-align:center;background:var(--green);color:#fff;border-radius:5px;font-size:12px;}
+
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:5px;margin-right:6px;vertical-align:2px;font-weight:600;white-space:nowrap;}
+  .t-must{background:#fdecea;color:#b3261e;}
+  .t-high{background:#fff7e6;color:#b45309;}
+  .t-mid{background:#e8f0fa;color:#1c5fa8;}
+
+  .fig{margin:16px 0;text-align:center;}
+  .fig svg{max-width:100%;height:auto;}
+  .fig .cap{font-size:13px;color:var(--ink3);margin-top:7px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+  .mini{border:1px solid var(--line);border-radius:11px;padding:14px 17px;background:#fcfdfe;}
+  .mini h4{margin:0 0 7px;color:var(--brand-d);font-size:14.5px;}
+  .footer{text-align:center;color:var(--ink3);font-size:13px;padding:26px 0 8px;line-height:2;}
+  .dr{font-family:Consolas,monospace;font-size:13.5px;}
+  .dr b{color:#7a4a00;}
+  @media (max-width:760px){.grid2{grid-template-columns:1fr;}.cover{padding:28px 20px;border-radius:0;}.cover h1{font-size:22px;}.card{padding:18px 16px;}.ans{padding-left:20px;}.ans::before{display:none;}}
+  @media print{body{background:#fff;font-size:12px;}.card{box-shadow:none;break-inside:avoid;}details .ans{display:block !important;}h2.sec{break-before:page;}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">ROUND 2 DEEP DIVE</div>
+  <h1>赢时胜复试专项 · <span>估值做账</span></h1>
+  <div class="sub">一面已确认岗位方向：<strong>估值核算系统 —— 账务模块（做账）</strong>｜本部自研 · 年底驻场约 2 个月</div>
+  <div class="meta">
+    <div class="chip">会计地基速成</div>
+    <div class="chip">10 个高频分录</div>
+    <div class="chip">做账链路全图</div>
+    <div class="chip">借贷不平怎么查</div>
+    <div class="chip">复试 14 题</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="box b-red">
+  <span class="t">为什么现在要做这份东西</span>
+  一面之前，"会计处理"只是手册里<strong>可能被考</strong>的一节。一面之后，岗位被明确为<strong>"估值系统，做账"</strong>——复试几乎必然围绕账务模块展开，而会计基础恰是简历里最薄的一环。<strong>这份材料就是你复试前唯一需要集中火力的地方。</strong>目标不是成为会计，是能听懂、能接话、能说出"我会怎么验"。
+</div>
+
+<!-- ================= 00 一面信息解读 ================= -->
+<h2 class="sec" id="s0"><span class="num">00</span>先解读：一面拿到了什么信息</h2>
+<p class="sec-desc">面试官回答你的反问时给出的每一条信息，都是带信号的，逐条拆开看。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:200px">面试官的回答</th><th>信号解读</th><th>你要做的动作</th></tr>
+    <tr>
+      <td><strong>"估值系统，做账"</strong></td>
+      <td>岗位被锁定到<strong>账务模块</strong>——凭证生成、记账、结账、总账/明细账、科目余额表。不是 TA、不是信息披露、不是纯前端页面测试。</td>
+      <td><span class="tag t-must">最高优先</span>把会计地基和分录背下来，这份材料就是为此写的。</td>
+    </tr>
+    <tr>
+      <td><strong>"本部自研，和现场驻场运维测试不同"</strong></td>
+      <td>你在做<strong>自家产品的测试</strong>，不是去客户现场当实施。需求、环境、迭代节奏都在公司内部。</td>
+      <td>复试可以主动说："我理解这个岗位是产品测试而不是实施交付，这和我原来在保融做产品线测试的方式是一致的。"</td>
+    </tr>
+    <tr>
+      <td><strong>"年底去现场约 2 个月，之后远程支持"</strong></td>
+      <td>这才是面试官问"介意加班吗"的<strong>真实原因</strong>——年底有客户现场的交付节点。</td>
+      <td><span class="tag t-must">必答</span>明确接受 + 拿出你的现场经验（6 个月客户现场支持、UAT、联调）。这是你相对其他候选人的<strong>差异化优势</strong>，别浪费。</td>
+    </tr>
+    <tr>
+      <td><strong>开发:测试 = 3:1</strong></td>
+      <td>测试团队有规模、有分工。意味着：流程相对规范、有测试开发的发挥空间、你的全栈能力更容易被看见。</td>
+      <td>复试可以问："测试团队内部有没有按模块分工？账务模块大概几个人负责？"</td>
+    </tr>
+    <tr>
+      <td><strong>"之后应该会有个复试面"</strong></td>
+      <td>面试官主动告知下一轮存在，且愿意花时间介绍岗位细节 —— 这在招聘里通常是<strong>正向信号</strong>（在"卖岗位"，怕你不来）。</td>
+      <td>按复试节奏准备，重点补账务业务 + 稳定性表达。</td>
+    </tr>
+  </table>
+
+  <div class="box b-green">
+    <span class="t">✅ 综合判断</span>
+    一面<strong>大概率通过</strong>。依据：① 主动告知有复试；② 问了加班（提前做预期管理，通常对"打算推进但担心预期不符"的人问）；③ 问了期望薪资（推进流程的必经环节）；④ 反问环节回答得非常具体（人头比、岗位归属、驻场安排），说明愿意投入时间争取你。
+    <p style="margin:8px 0 0"><strong>但真正决定成败的是那两道题</strong>："更想做业务测试还是开发" 和 "期望薪资"。这两题在复试/HR 面还会再出现，见第 04 和第 05 节。</p>
+  </div>
+</div>
+
+<!-- ================= 01 会计地基 ================= -->
+<h2 class="sec" id="s1"><span class="num">01</span>会计地基（15 分钟速成，必须张口就来）</h2>
+<p class="sec-desc">不用学会做账，但要能听懂账、说清方向。</p>
+
+<div class="card">
+  <h3>1.1 三条铁律</h3>
+  <div class="grid2">
+    <div class="mini">
+      <h4>① 会计恒等式</h4>
+      <p style="margin:0;font-size:14px"><strong>资产 = 负债 + 所有者权益</strong><br>基金产品里，所有者权益就是投资者持有的份额对应的净值。任何一笔业务发生后，这个等式必须仍然成立。</p>
+    </div>
+    <div class="mini">
+      <h4>② 借贷记账规则</h4>
+      <p style="margin:0;font-size:14px"><strong>有借必有贷，借贷必相等</strong><br>每笔业务至少影响两个科目，借方合计 = 贷方合计。<em>这是账务模块测试的第一条检查规则。</em></p>
+    </div>
+    <div class="mini">
+      <h4>③ 科目的借贷方向</h4>
+      <p style="margin:0;font-size:14px">资产类：<strong>借增贷减</strong><br>负债类：<strong>贷增借减</strong><br>所有者权益类：<strong>贷增借减</strong><br>损益类：收入贷增、费用借增</p>
+    </div>
+  </div>
+
+  <h3>1.2 基金会计科目表（记名称和类别，<span style="color:#b3261e">不要报编码</span>）</h3>
+  <table>
+    <tr><th style="width:110px">类别</th><th>常见科目</th><th>说明</th></tr>
+    <tr>
+      <td><strong>资产类</strong></td>
+      <td>银行存款、清算备付金（结算备付金）、存出保证金、<strong>证券投资</strong>（股票/债券/基金投资）、买入返售金融资产、应收股利、应收利息、其他应收款、待摊费用</td>
+      <td>产品能变成钱的东西。证券投资下一般分"成本"和"估值增值"两个明细。</td>
+    </tr>
+    <tr>
+      <td><strong>负债类</strong></td>
+      <td>卖出回购金融资产款、应付赎回款、应付管理人报酬、应付托管费、应付销售服务费、应付交易费用、应交税费、其他应付款、应付收益（应付利润）</td>
+      <td>产品欠别人的钱。<strong>应付管理人报酬/托管费/销售服务费</strong>是估值系统里最常考的计提科目。</td>
+    </tr>
+    <tr>
+      <td><strong>所有者权益类</strong></td>
+      <td>实收基金（实收资本/份额）、未分配利润、<strong>损益平准金</strong></td>
+      <td>损益平准金是基金会计特有的，用于区分申赎带来的份额变动和真实投资收益。</td>
+    </tr>
+    <tr>
+      <td><strong>损益类</strong></td>
+      <td>投资收益、公允价值变动损益、管理人报酬、托管费、销售服务费、交易费用、利息收入、其他收入</td>
+      <td>影响当期利润的科目。期末要结转到未分配利润。</td>
+    </tr>
+  </table>
+
+  <div class="box b-amber">
+    <span class="t">⚠️ 重要提醒：不要说科目编码</span>
+    各家公司（甚至同一家公司不同产品线）的科目编码体系都不一样，<strong>你报编码就是给自己挖坑</strong>。
+    标准安全答法："科目名称是行业通用的，编码我在原公司的体系里记得，但不同公司会不一样，所以我一般记名称和类别。"
+  </div>
+
+  <h3>1.3 一句话把"做账"讲清楚</h3>
+  <div class="box b-gold">
+    <span class="t">背下这段话</span>
+    "做账就是：把每天发生的业务，按会计规则翻译成<strong>会计分录</strong>，记到<strong>明细账</strong>里，汇总出<strong>科目余额表</strong>，再往上生成<strong>财务报表</strong>。估值系统里的做账还有一个特点——它是<strong>业务驱动、自动生成凭证</strong>的，业务数据一变，凭证就得跟着变，所以我做测试的重点是<strong>验证'业务数据 → 凭证'这个翻译过程对不对</strong>，而不只是看界面能不能操作。"
+  </div>
+</div>
+
+<!-- ================= 02 做账链路 ================= -->
+<h2 class="sec" id="s2"><span class="num">02</span>做账链路全图（复试最可能让你讲的）</h2>
+
+<div class="card">
+  <div class="fig">
+    <svg viewBox="0 0 660 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="做账链路">
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#7b93b3"/>
+        </marker>
+        <linearGradient id="gb" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1c5fa8"/><stop offset="100%" stop-color="#3d8fd8"/>
+        </linearGradient>
+      </defs>
+
+      <rect x="6" y="18" width="150" height="58" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+      <text x="81" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#123c6b">① 业务发生</text>
+      <text x="81" y="61" text-anchor="middle" font-size="10.5" fill="#3d4451">买入/卖出/申赎/分红</text>
+
+      <rect x="184" y="18" width="150" height="58" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+      <text x="259" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#123c6b">② 生成凭证</text>
+      <text x="259" y="61" text-anchor="middle" font-size="10.5" fill="#3d4451">按规则翻译成分录</text>
+
+      <rect x="362" y="18" width="150" height="58" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+      <text x="437" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2d7a">③ 过账</text>
+      <text x="437" y="61" text-anchor="middle" font-size="10.5" fill="#3d4451">明细账 / 总账</text>
+
+      <rect x="540" y="18" width="114" height="58" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+      <text x="597" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2d7a">④ 试算平衡</text>
+      <text x="597" y="61" text-anchor="middle" font-size="10.5" fill="#3d4451">借贷相抵为 0</text>
+
+      <line x1="158" y1="47" x2="180" y2="47" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <line x1="336" y1="47" x2="358" y2="47" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <line x1="514" y1="47" x2="536" y2="47" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+
+      <path d="M597,80 L597,104 L81,104 L81,118" stroke="#7b93b3" stroke-width="1.6" fill="none" marker-end="url(#ar2)" stroke-dasharray="5 3"/>
+
+      <rect x="6" y="120" width="150" height="58" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="81" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6500">⑤ 期末结账</text>
+      <text x="81" y="163" text-anchor="middle" font-size="10.5" fill="#3d4451">结转损益 / 关账</text>
+
+      <rect x="184" y="120" width="150" height="58" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="259" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6500">⑥ 科目余额表</text>
+      <text x="259" y="163" text-anchor="middle" font-size="10.5" fill="#3d4451">期初+发生额=期末</text>
+
+      <rect x="362" y="120" width="150" height="58" rx="9" fill="#e9f7ef" stroke="#1a7f4b" stroke-width="1.5"/>
+      <text x="437" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#0f5c35">⑦ 财务报表</text>
+      <text x="437" y="163" text-anchor="middle" font-size="10.5" fill="#3d4451">资产负债表 / 利润表</text>
+
+      <rect x="540" y="120" width="114" height="58" rx="9" fill="#e9f7ef" stroke="#1a7f4b" stroke-width="1.5"/>
+      <text x="597" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#0f5c35">⑧ 估值表</text>
+      <text x="597" y="163" text-anchor="middle" font-size="10.5" fill="#3d4451">对外核对凭据</text>
+
+      <line x1="158" y1="149" x2="180" y2="149" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <line x1="336" y1="149" x2="358" y2="149" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+      <line x1="514" y1="149" x2="536" y2="149" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar2)"/>
+
+      <rect x="6" y="200" width="648" height="40" rx="9" fill="url(#gb)"/>
+      <text x="330" y="217" text-anchor="middle" font-size="12.5" fill="#fff" font-weight="700">测试验收入口：① 直接比对 ③④⑤⑥⑦ 的输出结果 ｜ ② 是重点——业务数据到凭证的翻译过程最容易出 bug</text>
+      <text x="330" y="233" text-anchor="middle" font-size="11" fill="#d7e6f7">业务数据改了，凭证要跟着改；凭证对了，余额表和报表才对；余额表和报表对了，才能和托管行、和财务报表核对</text>
+    </svg>
+    <div class="cap">图 1：做账链路与测试验收入口</div>
+  </div>
+
+  <h3>这条链路上，测试该验什么</h3>
+  <table>
+    <tr><th style="width:150px">环节</th><th>验证点</th></tr>
+    <tr><td><strong>① 业务发生</strong></td><td>业务数据本身是否完整、准确、不重复（数据接入的幂等性）</td></tr>
+    <tr><td><strong>② 生成凭证</strong><span class="tag t-must" style="margin-left:6px">重点</span></td><td>借贷方向对不对、科目选得对不对、金额算得对不对、借贷是否平衡、一笔业务是否重复生成凭证（<strong>凭证重复是高频缺陷</strong>）</td></tr>
+    <tr><td><strong>③ 过账</strong></td><td>凭证是否完整过到明细账/总账；同一科目多笔业务累加是否正确</td></tr>
+    <tr><td><strong>④ 试算平衡</strong></td><td>全部科目借贷合计是否相等；不相等时能不能定位到具体凭证</td></tr>
+    <tr><td><strong>⑤ 期末结账</strong></td><td>损益结转是否完整、结账后能否反结账、跨月跨年是否正确</td></tr>
+    <tr><td><strong>⑥ 科目余额表</strong></td><td><strong>期初余额 + 本期借方 − 本期贷方 = 期末余额</strong>，逐科目核对</td></tr>
+    <tr><td><strong>⑦ 财务报表</strong></td><td>报表项目和科目余额的勾稽关系是否成立（如资产合计 = 负债 + 权益）</td></tr>
+    <tr><td><strong>⑧ 估值表</strong></td><td>与估值计算、与托管行核对结果一致</td></tr>
+  </table>
+</div>
+
+<!-- ================= 03 分录 ================= -->
+<h2 class="sec" id="s3"><span class="num">03</span>10 个高频分录（背下来就够用）</h2>
+<p class="sec-desc">面试时被问到，能说出"借什么、贷什么、为什么"，就是合格。说不准时用后面的安全答法。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:28px">#</th><th style="width:120px">业务场景</th><th style="width:300px">分录</th><th>考点</th></tr>
+    <tr><td>1</td><td><strong>买入股票</strong></td><td class="dr">借：证券投资—成本<br>　　交易费用<br>贷：证券清算款</td><td>成交金额与手续费要分开；成本是否含费用是合同约定的</td></tr>
+    <tr><td>2</td><td><strong>卖出股票</strong></td><td class="dr">借：证券清算款<br>贷：证券投资—成本<br>　　投资收益（差额，可为借）</td><td><span style="color:#b3261e">成本按移动加权平均法结转</span>——部分卖出时最容易算错</td></tr>
+    <tr><td>3</td><td><strong>估值增值（浮动盈亏）</strong></td><td class="dr">借：证券投资—估值增值<br>贷：公允价值变动损益<br>（浮亏反向）</td><td>按"本次估值增值 − 上次估值增值"记<strong>变动额</strong>，不是记累计数</td></tr>
+    <tr><td>4</td><td><strong>计提管理费</strong></td><td class="dr">借：管理人报酬<br>贷：应付管理人报酬</td><td>基数（当日/前一日净值）、年费率÷365、计提天数、起止日</td></tr>
+    <tr><td>5</td><td><strong>计提托管费</strong></td><td class="dr">借：托管费<br>贷：应付托管费</td><td>与管理费逻辑相同，费率不同，别混</td></tr>
+    <tr><td>6</td><td><strong>申购</strong></td><td class="dr">借：银行存款<br>贷：实收基金（份额）<br>　　损益平准金（差额）</td><td>申购金额 ÷ 申请日净值得份额；差额进损益平准金</td></tr>
+    <tr><td>7</td><td><strong>赎回</strong></td><td class="dr">借：实收基金（份额）<br>　　损益平准金<br>贷：应付赎回款</td><td>赎回款 = 份额 × 申请日净值 − 赎回费</td></tr>
+    <tr><td>8</td><td><strong>收益分配（分红）</strong></td><td class="dr">借：未分配利润 / 损益平准金<br>贷：应付收益</td><td>权益登记日 / 除息日 / 派现日的先后顺序</td></tr>
+    <tr><td>9</td><td><strong>结转损益</strong></td><td class="dr">借：本期利润<br>贷：未分配利润</td><td>结转时点（日终/月末/年结）和规则</td></tr>
+    <tr><td>10</td><td><strong>计提利息（债券/存款）</strong></td><td class="dr">借：应收利息<br>贷：利息收入</td><td>计息天数口径：实际天数/365 还是 360</td></tr>
+  </table>
+
+  <div class="box b-green">
+    <span class="t">✅ 安全答法（分录记不准时用这段，比硬编安全得多）</span>
+    "具体科目名我记得不够精确，但我知道这笔业务在逻辑上会影响哪几个方向——比如卖出股票，资产端成本减少、资金端增加，差额进投资收益，借贷两边一定会平。我做验证的时候习惯从业务单一路勾稽到凭证，只要借贷不平或者余额对不上，就能定位到是哪一步断的。"
+  </div>
+
+  <div class="box b-purple">
+    <span class="t">💡 主动补一句，效果翻倍</span>
+    "另外我理解，凭证是<strong>业务驱动自动生成</strong>的，所以测试的重点不是'手工做一笔账'，而是'业务数据变了以后，凭证要正确、及时、不重复地跟着变'。比如同一笔交易被重复导入，会不会重复生成两张凭证，这是我一定会验的场景。"
+  </div>
+</div>
+
+<!-- ================= 04 借贷不平 ================= -->
+<h2 class="sec" id="s4"><span class="num">04</span>实战题："科目余额表借贷不平，你怎么查？"</h2>
+<p class="sec-desc">这是账务模块最高频的实战题。按下面这条路径答，条理清楚就够了。</p>
+
+<div class="card">
+  <div class="fig">
+    <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="借贷不平排查路径">
+      <defs>
+        <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#7b93b3"/>
+        </marker>
+      </defs>
+
+      <rect x="10" y="14" width="640" height="46" rx="9" fill="#e8f0fa" stroke="#1c5fa8" stroke-width="1.5"/>
+      <text x="330" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#123c6b">第 1 步 · 缩小范围：不平是全局的还是局部的？</text>
+      <text x="330" y="51" text-anchor="middle" font-size="11" fill="#3d4451">是整个产品不平，还是某个科目不平？差额是多少？</text>
+
+      <rect x="10" y="78" width="640" height="46" rx="9" fill="#f2edfb" stroke="#6d4aa8" stroke-width="1.5"/>
+      <text x="330" y="98" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2d7a">第 2 步 · 回溯凭证：按差额金额反查</text>
+      <text x="330" y="115" text-anchor="middle" font-size="11" fill="#3d4451">用差额去凭证表里查金额匹配的记录 —— 单边挂账、金额录错最快暴露</text>
+
+      <rect x="10" y="142" width="640" height="46" rx="9" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="330" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6500">第 3 步 · 查四类高发原因</text>
+      <text x="330" y="179" text-anchor="middle" font-size="11" fill="#3d4451">① 单边分录 ② 重复生成 ③ 金额精度截断 ④ 期初余额未结转</text>
+
+      <rect x="10" y="206" width="640" height="46" rx="9" fill="#fdecea" stroke="#b3261e" stroke-width="1.5"/>
+      <text x="330" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#b3261e">第 4 步 · 定位到源头</text>
+      <text x="330" y="243" text-anchor="middle" font-size="11" fill="#3d4451">SQL 查凭证明细 → 读 Java 代码看生成规则 → 看日志定位执行分支</text>
+
+      <rect x="10" y="264" width="640" height="30" rx="9" fill="#e9f7ef" stroke="#1a7f4b" stroke-width="1.5"/>
+      <text x="330" y="283" text-anchor="middle" font-size="12" fill="#0f5c35" font-weight="700">第 5 步 · 修正后重跑，并确认历史数据是否需要追溯修正</text>
+
+      <line x1="330" y1="60" x2="330" y2="74" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <line x1="330" y1="124" x2="330" y2="138" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <line x1="330" y1="188" x2="330" y2="202" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <line x1="330" y1="252" x2="330" y2="260" stroke="#7b93b3" stroke-width="1.6" marker-end="url(#ar3)"/>
+    </svg>
+    <div class="cap">图 2：借贷不平的五步排查路径</div>
+  </div>
+
+  <h3>四类高发原因（记住这个，面试能撑住）</h3>
+  <table>
+    <tr><th style="width:150px">原因</th><th>表现</th><th>怎么验出来</th></tr>
+    <tr><td><strong>① 单边分录</strong></td><td>只生成了借方或只生成了贷方</td><td>查借贷金额相等的凭证数量，与业务笔数比对</td></tr>
+    <tr><td><strong>② 重复生成</strong></td><td>同一笔业务生成了两张凭证</td><td>按<strong>业务唯一键</strong>（产品+日期+流水号+业务类型）分组计数，找 count &gt; 1</td></tr>
+    <tr><td><strong>③ 精度截断</strong></td><td>金额四舍五入后借贷差 0.01</td><td>核对小数位和舍入顺序；用 <code>ROUND</code> 归一到业务精度再比</td></tr>
+    <tr><td><strong>④ 期初未结转</strong></td><td>上期期末余额没有成为本期期初</td><td>核对上期期末 = 本期期初，逐科目比</td></tr>
+  </table>
+
+  <h4>可以现场甩出来的 SQL</h4>
+<pre style="background:#1e2430;color:#e6edf3;padding:14px 17px;border-radius:10px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.7;margin:12px 0"><code><span style="color:#7d8b9c">-- 找重复生成的凭证（同一业务唯一键出现多次）</span>
+<span style="color:#ff9d6b">SELECT</span> fund_code, biz_date, biz_serial, biz_type, <span style="color:#ff9d6b">COUNT</span>(*) <span style="color:#ff9d6b">AS</span> cnt
+<span style="color:#ff9d6b">FROM</span>   t_voucher
+<span style="color:#ff9d6b">GROUP BY</span> fund_code, biz_date, biz_serial, biz_type
+<span style="color:#ff9d6b">HAVING</span> <span style="color:#ff9d6b">COUNT</span>(*) &gt; 1;
+
+<span style="color:#7d8b9c">-- 逐凭证校验借贷是否平衡</span>
+<span style="color:#ff9d6b">SELECT</span> voucher_id,
+       <span style="color:#ff9d6b">SUM</span>(<span style="color:#ff9d6b">CASE WHEN</span> dc_flag = <span style="color:#9ee4a5">'D'</span> <span style="color:#ff9d6b">THEN</span> amount <span style="color:#ff9d6b">ELSE</span> 0 <span style="color:#ff9d6b">END</span>) <span style="color:#ff9d6b">AS</span> debit_amt,
+       <span style="color:#ff9d6b">SUM</span>(<span style="color:#ff9d6b">CASE WHEN</span> dc_flag = <span style="color:#ff9d6b">'C'</span> <span style="color:#ff9d6b">THEN</span> amount <span style="color:#ff9d6b">ELSE</span> 0 <span style="color:#ff9d6b">END</span>) <span style="color:#ff9d6b">AS</span> credit_amt
+<span style="color:#ff9d6b">FROM</span>   t_voucher_entry
+<span style="color:#ff9d6b">GROUP BY</span> voucher_id
+<span style="color:#ff9d6b">HAVING</span> <span style="color:#ff9d6b">ROUND</span>(<span style="color:#ff9d6b">SUM</span>(<span style="color:#ff9d6b">CASE WHEN</span> dc_flag = <span style="color:#9ee4a5">'D'</span> <span style="color:#ff9d6b">THEN</span> amount <span style="color:#ff9d6b">ELSE</span> -amount <span style="color:#ff9d6b">END</span>), 2) &lt;&gt; 0;
+
+<span style="color:#7d8b9c">-- 科目余额表勾稽：期初 + 借 − 贷 是否等于期末</span>
+<span style="color:#ff9d6b">SELECT</span> fund_code, subject_code, beginning_balance, debit_amount, credit_amount, ending_balance
+<span style="color:#ff9d6b">FROM</span>   t_subject_balance
+<span style="color:#ff9d6b">WHERE</span>  <span style="color:#ff9d6b">ROUND</span>(beginning_balance + debit_amount - credit_amount, 2)
+       &lt;&gt; <span style="color:#ff9d6b">ROUND</span>(ending_balance, 2);</code></pre>
+  <p style="font-size:13.5px;color:#6b7280">表名是我按常见设计假设的，被问到时说明"表名我不清楚，我说一下思路"即可。<strong>重点是把三张校验 SQL 的思路讲清楚</strong>：重复检测、单笔借贷平衡、余额勾稽。</p>
+</div>
+
+<!-- ================= 05 复试题库 ================= -->
+<h2 class="sec" id="s5"><span class="num">05</span>复试 14 题（账务方向）</h2>
+<p class="sec-desc"><span class="tag t-must">必答</span> 是几乎一定会问的，必须张口就来。</p>
+
+<div class="card">
+  <h3>业务与账务</h3>
+
+  <details><summary><span class="tag t-must">必答</span>说一笔买入股票的业务，从成交到生成凭证的完整链路。</summary>
+  <div class="ans">
+    <p>分四步：<strong>① 业务数据进来</strong>——从投资交易系统或交易录入获取成交明细，包括证券代码、数量、成交价、费用；<strong>② 数据校验</strong>——校验证券主数据是否存在、数量金额是否合理、有没有重复；<strong>③ 生成凭证</strong>——按规则生成"借：证券投资—成本 + 交易费用，贷：证券清算款"；<strong>④ 过账与汇总</strong>——凭证过到明细账，汇总到科目余额表，最终进入估值表和财务报表。</p>
+    <p>补一句我的测试思路："我会重点验第 ③ 步，因为它是最容易出问题的翻译环节——借贷方向、科目选择、金额拆分（成本和费用怎么分）、以及会不会重复生成。"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-must">必答</span>估值表里的"成本"和"市值"分别怎么来？差额叫什么？</summary>
+  <div class="ans"><p>成本来自账务系统里证券投资的成本余额——按<strong>移动加权平均法</strong>结转后的持仓成本。市值 = 持仓数量 × 估值日的估值价（股票的收盘价 / 债券的第三方估值净价 / 场外基金的公布净值）。差额叫<strong>估值增值</strong>，也就是浮动盈亏，等于"市值 − 成本总额"。它每天随行情变动，系统按变动额记录，并生成公允价值变动损益的凭证。</p></div></details>
+
+  <details><summary><span class="tag t-must">必答</span>管理费、托管费怎么计提？凭证怎么写？坑在哪？</summary>
+  <div class="ans">
+    <p>按日计提：每日费用 = 计提基数 × 年费率 ÷ 365（部分产品用 360，看合同）。</p>
+    <p>分录：借"管理人报酬（或托管费）"，贷"应付管理人报酬（或应付托管费）"。</p>
+    <p>坑有四个：<strong>① 计提基数</strong>用当日还是前一日净值；<strong>② 天数口径</strong>自然日还是交易日，节假日是否计提；<strong>③ 费率</strong>是否分段、有上下限；<strong>④ 起止日期</strong>——成立首日、终止日、暂停估值期间是否计提，以及<strong>费率变更的生效日切换</strong>。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-must">必答</span>科目余额表借贷不平，你怎么查？</summary>
+  <div class="ans"><p>用第 04 节的五步路径 + 四类高发原因。要点是先缩小范围（全局还是局部、差额多少），再用差额反查凭证，最后落到 SQL + 代码 + 日志三层定位。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>什么是损益平准金？为什么基金会计要有这个科目？</summary>
+  <div class="ans"><p>作用是<strong>区分"申赎带来的份额变动"和"投资产生的真实损益"</strong>。投资人申购/赎回时会带进来或带走一部分未分配利润，这部分记入损益平准金，避免把投资人的进出误算成基金的收益或亏损。答不出来时的安全说法："这个科目是用来在申赎时区分已实现/未实现收益归属的，具体规则我记得不够细。"</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>结账流程是怎样的？结账后还能改数据吗？</summary>
+  <div class="ans"><p>结账一般包括：计提应计费用 → 结转损益 → 核对试算平衡 → 锁定会计期间。结账后通常不允许直接改数，需要走<strong>反结账 → 修正 → 重新结账</strong>的流程，并且要留痕。测试关注点：反结账的权限控制、反结账后再结账的数据是否一致、跨月/跨年结转是否正确。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>凭证重复生成，可能是哪些原因？</summary>
+  <div class="ans"><p>四类：<strong>① 业务数据重复导入</strong>（同一批数据跑了两遍，系统没做幂等）；<strong>② 跑批中断后重跑</strong>没有清理已生成的凭证；<strong>③ 触发条件重叠</strong>（两个规则都命中同一笔业务）；<strong>④ 并发</strong>——同一产品被两个任务同时处理。验证方法：按业务唯一键分组计数找 count &gt; 1，再结合跑批日志定位。</p></div></details>
+
+  <h3>测试与工具</h3>
+
+  <details><summary><span class="tag t-must">必答</span>账务模块的测试用例，你会怎么设计？</summary>
+  <div class="ans">
+    <p>四层：</p>
+    <ul>
+      <li><strong>规则层</strong>：每类业务的分录规则（借贷方向、科目、金额拆分），用判定表穷举规则组合。</li>
+      <li><strong>数据层</strong>：金额边界（0、负数、极大值）、精度（小数位、舍入）、数量边界。</li>
+      <li><strong>流程层</strong>：日终制证 → 过账 → 试算平衡 → 结账 → 反结账，用场景法串起来。</li>
+      <li><strong>一致性层</strong>：凭证 ↔ 明细账 ↔ 科目余额表 ↔ 报表 的四方勾稽；新老版本结果一致。</li>
+    </ul>
+    <p>另外每个用例我都要能答出"正确答案从哪来"——手算、Excel、老系统、托管行，四条独立路径之一。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>你怎么验证账务算得对？</summary>
+  <div class="ans"><p>三方比对 + 逐层勾稽。<strong>三方比对</strong>：系统算 vs 手工 Excel 算、新版本 vs 老版本、我方 vs 托管行。<strong>逐层勾稽</strong>：业务流水 → 凭证明细 → 科目余额 → 报表，每一层都能往上追到源头。再加<strong>逐笔 SQL 校验</strong>：把凭证明细和业务明细按唯一键 JOIN 起来，逐笔比金额。</p></div></details>
+
+  <details><summary><span class="tag t-high">高</span>你怎么区分前后端 bug？（一面问过，复试可能再问）</summary>
+  <div class="ans">
+    <p>按"请求 → 数据 → 落库 → 日志"四层切：</p>
+    <ol>
+      <li><strong>看请求</strong>：F12 的 Network，请求发出去没有、参数对不对。<em>没发出或参数错 → 前端</em>。</li>
+      <li><strong>绕过前端打接口</strong>：Postman 直接调。<em>接口返回正确但页面显示错 → 前端（渲染/字段映射）；接口返回就错 → 后端</em>。</li>
+      <li><strong>查数据库</strong>：SQL 看落库。<em>落库就错 → 后端</em>；落库对但接口返回错 → 后端（查询/序列化）。</li>
+      <li><strong>看日志</strong>：后端有异常堆栈 → 后端。</li>
+    </ol>
+    <p><strong>账务系统的特殊性</strong>：不能只看页面，要沿数据链路切——比如净值不对，可能是"行情数据错 → 计算错 → 展示错"，得逐层排。我习惯先判断问题出在哪一层，再决定找谁，这样能减少来回推诿。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>用过 AI 吗？怎么用在测试里？（一面问过）</summary>
+  <div class="ans">
+    <p>三个场景：<strong>① 用例设计</strong>——把需求描述和业务规则给 AI，先出一版用例骨架，我再按业务经验补充裁剪；<strong>② 脚本生成</strong>——用 Cursor/Claude Code 生成 pytest 接口自动化和 Playwright UI 自动化脚本，我负责审查调试；<strong>③ 问题定位</strong>——把报错堆栈和 SQL 给它辅助分析。</p>
+    <p>但守住一条线：<strong>AI 生成的断言必须我自己复核</strong>，尤其是涉及金额和精度的。<strong>账务系统里的断言错一条，比少测十条更危险。</strong></p>
+  </div></details>
+
+  <h3>动机与稳定性（复试和 HR 面一定会再问）</h3>
+
+  <details><summary><span class="tag t-must">必答</span>你更想做业务测试还是开发？（一面问过，<strong>这是你的最大风险点</strong>）</summary>
+  <div class="ans">
+    <div class="box b-red" style="margin-top:0">
+      <span class="t">为什么这题危险</span>
+      你有开发能力，面试官会担心<strong>你把测试当跳板，干一年就转开发</strong>。而你还带着 gap 5 个月，越是急于入职，面试官越会怀疑投入度。<strong>这题的答案直接关系到"要不要给你发 offer"。</strong>
+    </div>
+    <p><strong>正确方向：明确选业务测试，并解释为什么开发是手段不是目的。</strong></p>
+    <div class="script">
+      <p>"业务测试。<strong>我做过全栈的工具开发，但我发现真正让我有成就感的，是把一个业务规则搞清楚、把数据验准，而不是写代码本身。</strong></p>
+      <p>我写工具是为了解决测试里的重复劳动——比如我做配置生成工具、报文比对自动化，都是因为我在测试里被这些重复的活儿卡住了。所以我的定位是<strong>业务测试为主、具备测试开发能力</strong>，而不是随时准备转开发。</p>
+      <p>而且我理解账务模块恰恰需要这种人——它既要懂会计规则，又要能自己写 SQL 和工具去核对数据。这两样我都有。"</p>
+    </div>
+    <p><strong>雷区答法（千万不要）：</strong>"其实我更喜欢开发" / "两个都可以，看公司安排" / "先做测试，以后再看"——任何带"以后"的表达都会被听成"迟早要走"。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-must">必答</span>年底要去客户现场大概 2 个月，能接受吗？</summary>
+  <div class="ans">
+    <p>明确接受，并且<strong>用事实而不是承诺来证明</strong>：</p>
+    <div class="script">
+      <p>"可以。我在原公司参与过 <strong>6 个月的客户现场支持</strong>，那段时间是做版本升级、联调和 UAT 验收，包括现场和客户的业务人员一起对数据、跑流程。驻场的工作节奏、和客户沟通的方式我都是熟悉的。</p>
+      <p>而且我觉得账务模块去现场反而是好事——<strong>很多账务上的规则细节，合同和文档里写不清楚，只有跟客户的核算人员当面过一遍才说得明白。</strong>"</p>
+    </div>
+    <p>最后那句是你的加分项：它说明你理解"做账"这类业务的特殊性，而不是把驻场当成负担。</p>
+  </div></details>
+
+  <details><summary><span class="tag t-high">高</span>期望薪资是多少？（一面问过，HR 面还会再问）</summary>
+  <div class="ans">
+    <p>关键在于<strong>口径一致</strong>——一面报的数，HR 面不能变。</p>
+    <ul>
+      <li>如果一面报的是范围（如 15-18K）→ HR 面保持一致，说"和一面沟通的一致"。</li>
+      <li>如果一面报的是单点数字 → HR 面可以小幅上浮，但要给理由："了解岗位职责后我发现要负责账务模块，对业务理解的要求比我想的更高。"</li>
+      <li>如果一面没报（对方只说"后续沟通"）→ 先问区间："方便介绍一下这个岗位的薪资区间吗？"</li>
+    </ul>
+    <p>被压价时的说法："我理解。想确认一下，这之外还有绩效、项目奖金或驻场补贴吗？另外调薪的周期和幅度大概怎样？"</p>
+  </div></details>
+
+  <details><summary><span class="tag t-mid">中</span>为什么选择做测试，而不是开发？</summary>
+  <div class="ans"><p>和"业务测试还是开发"是同一题的另一种问法，答案要一致。<strong>核心逻辑：我擅长的是"把规则搞清楚 + 把数据验准"这件事，而不是写代码本身。</strong>可以补一句真实感受："做测试的时候，我是站在业务的对立面去质疑它——这个过程我很享受。"</p></div></details>
+</div>
+
+<!-- ================= 06 反问 ================= -->
+<h2 class="sec" id="s6"><span class="num">06</span>复试的反问（换一批，别再问一面的）</h2>
+<div class="card">
+  <p>一面你已经问过人流比、岗位归属、驻场安排。复试是更高级别的负责人，要问<strong>业务和团队层面</strong>的问题：</p>
+  <ul>
+    <li>"账务模块目前是几个人负责？测试这边是和开发按模块结对，还是按版本轮着来？"</li>
+    <li>"估值核算 V5.5 信创版本在推进，账务模块的测试主要压力是在<strong>数据一致性验证</strong>上吗？"</li>
+    <li>"账务模块的历史缺陷，主要集中在哪一类？是凭证生成规则，还是结账和余额勾稽？"<span style="color:#6b7280;font-size:13.5px">（这个问题很专业，能体现出你在思考质量风险从哪来）</span></li>
+    <li>"如果入职，您希望我在前三个月做到什么程度算合格？"</li>
+    <li>"年底这次去客户现场，主要是什么节点？我需要提前准备什么？"</li>
+  </ul>
+</div>
+
+<!-- ================= 07 一段话总结 ================= -->
+<h2 class="sec" id="s7"><span class="num">07</span>复试前 5 分钟速览</h2>
+<div class="card">
+  <div class="box b-gold">
+    <span class="t">① 一句话定位（说给账务模块听的版本）</span>
+    "我是一个懂账务核对、能写 SQL 和工具、能把人工对账变成自动化的业务测试。我做的资金账务和贵司的估值做账，验证的是同一件事——<strong>业务数据被翻译成会计分录的过程，是否准确、完整、不重复</strong>。"
+  </div>
+
+  <div class="box b-brand">
+    <span class="t">② 做账链路（能背出来）</span>
+    业务发生 → 生成凭证 → 过账（明细账/总账）→ 试算平衡 → 期末结账 → 科目余额表 → 财务报表 → 估值表
+    <p style="margin:8px 0 0"><strong>测试重点在"生成凭证"这一环</strong>，因为它是业务规则到会计语言的翻译，最容易出 bug。</p>
+  </div>
+
+  <div class="box b-green">
+    <span class="t">③ 三条铁律</span>
+    有借必有贷，借贷必相等；资产 = 负债 + 所有者权益；期初 + 借方 − 贷方 = 期末。
+  </div>
+
+  <div class="box b-purple">
+    <span class="t">④ 借贷不平的四类原因</span>
+    单边分录 / 凭证重复生成 / 精度截断 / 期初未结转。
+  </div>
+
+  <div class="box b-red">
+    <span class="t">⑤ 最大风险题（必背）</span>
+    "更想做业务测试还是开发？" → <strong>"业务测试。开发是手段不是目的，我写工具是为了解决测试里的重复劳动。"</strong>
+  </div>
+</div>
+
+<div class="footer">
+  赢时胜复试专项 · 估值做账　|　候选人：尹胜　|　基于 2026-10-12 一面反馈整理<br>
+  祝复试顺利 🎯
+</div>
+
+</div>
+</body>
+</html>
